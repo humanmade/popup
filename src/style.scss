@@ -1,7 +1,4 @@
 .wp-block-hm-exit-popup {
-	background: rgba(0,0,0);
-	backdrop-filter: opacity(75%);
-
 	padding:
 		var(--wp--style--root--padding-top, 10px)
 		var(--wp--style--root--padding-right, 10px)
@@ -35,11 +32,13 @@
 	}
 
 	&__backdrop {
+		background: rgba(0, 0, 0);
 		position: absolute;
 		z-index: 1;
 		left: 0;
 		top: 0;
 		right: 0;
 		bottom: 0;
+		opacity: 0.75;
 	}
 }

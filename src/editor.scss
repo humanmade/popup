@@ -1,9 +1,4 @@
-/**
- * The following styles get applied inside the editor only.
- *
- * Replace them with your own styles or remove the file completely.
- */
-
+// stylelint-disable function-comma-space-after
 .wp-block-hm-exit-popup {
 	position: relative;
 	width: auto;
@@ -11,10 +6,10 @@
 	opacity: 1;
 	margin: 0;
 	padding: 40px;
-	background-image: repeating-linear-gradient(
-		45deg,
-		rgba(255,255,255,0.3),
-		rgba(255,255,255,0.3) 10px,
-		rgba(0,0,0,0.3) 10px,
-		rgba(0,0,0,0.3) 20px);
+	background-image:
+		repeating-linear-gradient(45deg,
+		rgba(255, 255, 255, 0.3),
+		rgba(255, 255, 255, 0.3) 10px,
+		rgba(0, 0, 0, 0.3) 10px,
+		rgba(0, 0, 0, 0.3) 20px);
 }

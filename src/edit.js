@@ -1,44 +1,93 @@
-/**
- * Retrieves the translation of text.
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-i18n/
- */
 import { __ } from '@wordpress/i18n';
 
-/**
- * React hook that is used to mark the block wrapper element.
- * It provides all the necessary props like the class name.
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
- */
-import { useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
+import {
+	useBlockProps,
+	useInnerBlocksProps,
+	InspectorControls,
+} from '@wordpress/block-editor';
 
-/**
- * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
- * Those files can contain any CSS code that gets applied to the editor.
- *
- * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
- */
+import { PanelBody, RangeControl } from '@wordpress/components';
+
 import './editor.scss';
 
 /**
- * The edit function describes the structure of your block in the context of the
- * editor. This represents what the editor will render when the block is used.
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#edit
- *
+ * @param {Object}   props
+ * @param {Object}   props.attributes
+ * @param {Function} props.setAttributes
  * @return {Element} Element to render.
  */
-export default function Edit() {
-	const blockProps = useBlockProps();
-    const { children, ...innerBlocksProps } = useInnerBlocksProps( blockProps, {
+export default function Edit( { attributes, setAttributes } ) {
+	const { ...blockProps } = useBlockProps();
+	const { children, ...innerBlocksProps } = useInnerBlocksProps( blockProps, {
 		template: [ [ 'core/group', {}, [ [ 'core/paragraph' ] ] ] ],
 	} );
 
+	const backdropClassNames = [ 'wp-block-hm-exit-popup__backdrop' ];
+	if ( attributes.backgroundColor ) {
+		backdropClassNames.push(
+			`has-${ attributes.backgroundColor }-background-color`
+		);
+	}
+
+	const styles = {
+		opacity: attributes.opacity / 100,
+	};
+
 	return (
 		<div { ...innerBlocksProps }>
+			<InspectorControls group="styles">
+				<PanelBody>
+					<RangeControl
+						label={ __( 'Background opacity', 'exit-popup' ) }
+						value={ attributes.opacity }
+						onChange={ ( opacity ) => setAttributes( { opacity } ) }
+						min={ 0 }
+						max={ 100 }
+					/>
+				</PanelBody>
+			</InspectorControls>
+			<InspectorControls>
+				<PanelBody>
+					<p>
+						{ __(
+							'The popup will be invisible until someone moves their mouse cursor up and out of the window or tab.',
+							'exit-popup'
+						) }
+					</p>
+					<p>
+						{ __(
+							'Clicking the background or pressing escape will close the popup.',
+							'exit-popup'
+						) }
+					</p>
+					<p>
+						{ __(
+							'A link or button with the URL "#close" anywhere within the popup will also close it.',
+							'exit-popup'
+						) }
+					</p>
+				</PanelBody>
+				<PanelBody>
+					<RangeControl
+						label={ __( 'Cookie expiration', 'exit-popup' ) }
+						help={ __(
+							'Number of days before exit popup can be shown again to the current visitor',
+							'exit-popup'
+						) }
+						value={ attributes.cookieExpiration }
+						onChange={ ( cookieExpiration ) =>
+							setAttributes( { cookieExpiration } )
+						}
+						min={ 0 }
+						max={ 30 }
+					/>
+				</PanelBody>
+			</InspectorControls>
 			{ children }
-			<div className="wp-block-hm-exit-popup__backdrop"></div>
+			<div
+				className={ backdropClassNames.join( ' ' ) }
+				style={ styles }
+			></div>
 		</div>
 	);
 }

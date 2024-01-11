@@ -13,13 +13,26 @@
 		"color": {
 			"background": true,
 			"gradients": true,
-			"text": false
+			"text": false,
+			"__experimentalSkipSerialization": true
 		},
 		"multiple": false
 	},
+	"attributes": {
+		"opacity": {
+			"type": "number",
+			"default": 75
+		},
+		"cookieExpiration": {
+			"type": "number",
+			"default": 7
+		}
+	},
 	"selectors": {
 		"root": ".wp-block-hm-exit-popup",
-		"color": "> .wp-block-hm-exit-popup__backdrop"
+		"color": {
+			"background": ".wp-block-hm-exit-popup > .wp-block-hm-exit-popup__backdrop"
+		}
 	},
 	"textdomain": "exit-popup",
 	"editorScript": "file:./index.js",
