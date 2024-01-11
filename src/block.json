@@ -1,0 +1,29 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "hm/exit-popup",
+	"version": "0.1.0",
+	"title": "Exit Popup",
+	"category": "widgets",
+	"icon": "exit",
+	"description": "Exit popup wrapper block",
+	"example": {},
+	"supports": {
+		"html": false,
+		"color": {
+			"background": true,
+			"gradients": true,
+			"text": false
+		},
+		"multiple": false
+	},
+	"selectors": {
+		"root": ".wp-block-hm-exit-popup",
+		"color": "> .wp-block-hm-exit-popup__backdrop"
+	},
+	"textdomain": "exit-popup",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"viewScript": "file:./view.js"
+}

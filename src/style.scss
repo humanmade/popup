@@ -1,0 +1,45 @@
+.wp-block-hm-exit-popup {
+	background: rgba(0,0,0);
+	backdrop-filter: opacity(75%);
+
+	padding:
+		var(--wp--style--root--padding-top, 10px)
+		var(--wp--style--root--padding-right, 10px)
+		var(--wp--style--root--padding-bottom, 10px)
+		var(--wp--style--root--padding-left, 10px);
+
+	position: fixed;
+	top: 100%;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	opacity: 0;
+	transition: opacity 150ms linear, top 0s linear 150ms;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: auto;
+	z-index: 200;
+	box-sizing: border-box;
+
+	&--show {
+		transition: opacity 150ms linear;
+		top: 0;
+		opacity: 1;
+	}
+
+	> * {
+		position: relative;
+		z-index: 2;
+		max-width: 100%;
+	}
+
+	&__backdrop {
+		position: absolute;
+		z-index: 1;
+		left: 0;
+		top: 0;
+		right: 0;
+		bottom: 0;
+	}
+}
