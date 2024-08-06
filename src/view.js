@@ -75,6 +75,7 @@ const bootstrap = () => {
 		)
 		.forEach( ( el ) => {
 			el.addEventListener( 'click', ( event ) => {
+				event.preventDefault();
 				event.currentTarget.closest( '.wp-block-hm-popup' ).close();
 			} );
 		} );
