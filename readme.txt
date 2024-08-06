@@ -1,14 +1,21 @@
 === Exit Popup ===
 Contributors:      humanmade
-Tags:              block, exit popup, marketing
-Tested up to:      6.3
+Tags:              block, popup, exit popup, marketing
+Tested up to:      6.6.1
 Stable tag:        0.1.0
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
-A simple exit popup wrapper block that can display any content you wish.
+A lightweight popup wrapper block that can display any content you wish.
 
 == Description ==
+
+Built using modern web standards, this block lets you drop any content you like inside. Use it to create your UI patterns.
+
+Features:
+
+- Trigger on click from any link or button
+- Trigger on exit intent
 
 == Installation ==
 

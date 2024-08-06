@@ -1,1 +1,1 @@
-.wp-block-hm-exit-popup{background-image:repeating-linear-gradient(45deg,hsla(0,0%,100%,.3),hsla(0,0%,100%,.3) 10px,rgba(0,0,0,.3) 0,rgba(0,0,0,.3) 20px);height:auto;margin:0;opacity:1;padding:40px;position:relative;width:auto}
+.wp-block-hm-popup{background-color:rgba(0,0,0,.3);background-image:repeating-linear-gradient(45deg,hsla(0,0%,100%,.3),hsla(0,0%,100%,.3) 10px,rgba(0,0,0,.3) 0,rgba(0,0,0,.3) 20px);height:auto;margin:0;opacity:1;padding:40px;position:relative;width:auto;z-index:1!important}

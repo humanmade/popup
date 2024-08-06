@@ -1,26 +1,24 @@
-.wp-block-hm-exit-popup {
-	padding:
-		var(--wp--style--root--padding-top, 10px)
-		var(--wp--style--root--padding-right, 10px)
-		var(--wp--style--root--padding-bottom, 10px)
-		var(--wp--style--root--padding-left, 10px);
-
-	position: fixed;
+.wp-block-hm-popup {
 	top: 100%;
-	left: 0;
-	width: 100vw;
-	height: 100vh;
 	opacity: 0;
-	transition: opacity 150ms linear, top 0s linear 150ms;
-	display: flex;
+	transition:
+		opacity 150ms linear,
+		top 0s linear 150ms,
+		overlay 150ms linear allow-discrete,
+		display 150ms linear allow-discrete;
 	align-items: center;
 	justify-content: center;
 	overflow: auto;
 	z-index: 200;
 	box-sizing: border-box;
+	max-width: var(--wp--style--global--content-size, 680px);
+    width: 95vw;
+	border: 0;
+	background: none;
 
-	&--show {
+	&[open] {
 		transition: opacity 150ms linear;
+		display: flex;
 		top: 0;
 		opacity: 1;
 	}
@@ -28,17 +26,38 @@
 	> * {
 		position: relative;
 		z-index: 2;
-		max-width: 100%;
+		width: 100%;
+		background-color: rgb(255, 255, 255);
 	}
+}
 
-	&__backdrop {
-		background: rgba(0, 0, 0);
-		position: absolute;
-		z-index: 1;
-		left: 0;
-		top: 0;
-		right: 0;
-		bottom: 0;
-		opacity: 0.75;
+/* Before-open state */
+/* Needs to be after the previous dialog[open] rule to take effect,
+    as the specificity is the same */
+@starting-style {
+	.wp-block-hm-popup[open] {
+		opacity: 0;
+		top: 100%;
+	}
+}
+
+/* Transition the :backdrop when the dialog modal is promoted to the top layer */
+.wp-block-hm-popup::backdrop {
+	background-color: rgba(0, 0, 0, 0%);
+	transition:
+		display 150ms allow-discrete,
+		overlay 150ms allow-discrete,
+		background-color 150ms;
+}
+
+.wp-block-hm-popup[open]::backdrop {
+	background-color: rgba(0, 0, 0, 75%);
+}
+
+/* This starting-style rule cannot be nested inside the above selector
+  because the nesting selector cannot represent pseudo-elements. */
+@starting-style {
+	.wp-block-hm-popup[open]::backdrop {
+		background-color: rgba(0, 0, 0, 0%);
 	}
 }

@@ -1,64 +1,83 @@
-const exit = ( e ) => {
-	const shouldExit =
-		e.currentTarget.classList.contains(
-			'wp-block-hm-exit-popup__backdrop'
-		) || // user clicks on mask
-		e.currentTarget.classList.contains( 'wp-block-hm-exit-popup__close' ) || // user clicks on the close icon
-		e.currentTarget.href.endsWith( '#close' ) || // user clicks custom close link / button
-		e.keyCode === 27; // user hits escape
-
-	if ( shouldExit ) {
-		e.preventDefault();
-		document.querySelector( 'html' ).classList.remove( 'has-modal-open' );
-		document
-			.querySelector( '.wp-block-hm-exit-popup' )
-			.classList.remove( 'wp-block-hm-exit-popup--show' );
-	}
-};
-
 const mouseEvent = ( e ) => {
 	const shouldShowExitIntent =
 		! e.toElement && ! e.relatedTarget && e.clientY < 10;
 
 	if ( shouldShowExitIntent ) {
 		document.removeEventListener( 'mouseout', mouseEvent );
-		document
-			.querySelector( '.wp-block-hm-exit-popup' )
-			.classList.add( 'wp-block-hm-exit-popup--show' );
 		document.querySelector( 'html' ).classList.add( 'has-modal-open' );
-
+		document
+			.querySelector( '.wp-block-hm-popup[data-trigger="exit"]' )
+			.showModal();
 		window.localStorage.setItem( 'exitIntentShown', Date.now() );
 	}
 };
 
 const bootstrap = () => {
-	// Get expiry setting on local storage value.
-	const expirationDays = parseInt(
-		document.querySelector( '.wp-block-hm-exit-popup' )?.dataset.expiry ||
-			7,
-		10
-	);
-
-	if (
-		parseInt( window.localStorage.getItem( 'exitIntentShown' ) || 0, 10 ) <
-		Date.now() - expirationDays * 24 * 60 * 60 * 1000
-	) {
-		setTimeout( () => {
-			document.addEventListener( 'mouseout', mouseEvent );
-			document.addEventListener( 'keydown', exit );
+	let exitIntentSetup = false;
+	document.querySelectorAll( '.wp-block-hm-popup' ).forEach( ( popup ) => {
+		// On close remove HTML class.
+		popup.addEventListener( 'close', () => {
 			document
-				.querySelectorAll(
-					[
-						'.wp-block-hm-exit-popup__backdrop',
-						'.wp-block-hm-exit-popup__close',
-						'.wp-block-hm-exit-popup [href="#close"]',
-					].join( ',' )
-				)
-				.forEach( ( el ) => {
-					el.addEventListener( 'click', exit );
+				.querySelector( 'html' )
+				.classList.remove( 'has-modal-open' );
+		} );
+
+		// On backdrop click, close modal.
+		popup.addEventListener( 'mousedown', ( event ) => {
+			if ( event.target === event.currentTarget ) {
+				event.currentTarget.close();
+			}
+		} );
+
+		// Handle click trigger.
+		if ( popup?.dataset.trigger === 'click' ) {
+			document
+				.querySelectorAll( `[href="#${ popup.id || '' }"]` )
+				.forEach( ( trigger ) => {
+					trigger.addEventListener( 'click', ( event ) => {
+						event.preventDefault();
+						document
+							.querySelector( 'html' )
+							.classList.add( 'has-modal-open' );
+						popup.showModal();
+					} );
 				} );
-		}, 3000 );
-	}
+		}
+
+		// Handle exit intent trigger.
+		if ( popup?.dataset.trigger === 'exit' ) {
+			// Get expiry setting on local storage value.
+			const expirationDays = parseInt( popup?.dataset.expiry || 7, 10 );
+
+			if (
+				parseInt(
+					window.localStorage.getItem( 'exitIntentShown' ) || 0,
+					10
+				) <
+					Date.now() - expirationDays * 24 * 60 * 60 * 1000 &&
+				! exitIntentSetup
+			) {
+				exitIntentSetup = true;
+				setTimeout( () => {
+					document.addEventListener( 'mouseout', mouseEvent );
+				}, 2000 );
+			}
+		}
+	} );
+
+	// Bind close events.
+	document
+		.querySelectorAll(
+			[
+				'.wp-block-hm-popup__close',
+				'.wp-block-hm-popup [href="#close"]',
+			].join( ',' )
+		)
+		.forEach( ( el ) => {
+			el.addEventListener( 'click', ( event ) => {
+				event.currentTarget.closest( '.wp-block-hm-popup' ).close();
+			} );
+		} );
 };
 
 // Handle async scripts.

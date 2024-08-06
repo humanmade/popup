@@ -10,27 +10,15 @@ export default function save( { attributes } ) {
 	const { children, ...innerBlocksProps } =
 		useInnerBlocksProps.save( blockProps );
 
-	const backdropClassNames = [ 'wp-block-hm-exit-popup__backdrop' ];
-	if ( attributes.backgroundColor ) {
-		backdropClassNames.push(
-			`has-${ attributes.backgroundColor }-background-color`
-		);
-	}
-
-	const styles = {
-		opacity: attributes.opacity / 100,
-	};
-
 	return (
-		<div
+		<dialog
 			{ ...innerBlocksProps }
+			data-trigger={ attributes.trigger || 'click' }
 			data-expiry={ attributes.cookieExpiration }
+			data-backdrop-opacity={ ( attributes.opacity || 1 ) / 100 }
+			data-backdrop-color={ attributes.backgroundColor }
 		>
 			{ children }
-			<div
-				className={ backdropClassNames.join( ' ' ) }
-				style={ styles }
-			></div>
-		</div>
+		</dialog>
 	);
 }

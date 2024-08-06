@@ -1,19 +1,19 @@
 <?php
 /**
- * Plugin Name:       Exit Popup
- * Description:       A container block that displays its contents as an exit intent popup.
+ * Plugin Name:       Popup Block
+ * Description:       A container block that displays its contents as a popup.
  * Requires at least: 6.1
  * Requires PHP:      7.0
- * Version:           1.0.0
+ * Version:           0.1.0
  * Author:            Human Made Limited
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       exit-popup
+ * Text Domain:       hm-popup
  *
- * @package           exit-popup
+ * @package           hm-popup
  */
 
-namespace HM\Exit_Popup;
+namespace HM\Popup;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -37,7 +37,26 @@ add_action( 'init', __NAMESPACE__ . '\\init' );
  *
  */
 function enqueue_scripts() : void {
-	wp_script_add_data( 'hm-exit-popup-view-script', 'strategy', 'defer' );
+	wp_script_add_data( 'hm-popup-view-script', 'strategy', 'defer' );
 }
 
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_scripts' );
+
+/**
+ * Filters the HTML tags that are allowed for a given context.
+ *
+ * @param array[] $html    Allowed HTML tags.
+ * @param string  $context Context name.
+ * @return array[] Allowed HTML tags.
+ */
+function filter_wp_kses_allowed_html( array $html, string $context ) : array {
+	$html['dialog'] = [
+		'open' => [
+			'valueless' => 'y',
+		],
+	];
+
+	return $html;
+}
+
+add_filter( 'wp_kses_allowed_html', __NAMESPACE__ . '\\filter_wp_kses_allowed_html', 10, 2 );

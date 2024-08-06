@@ -1,13 +1,20 @@
 {
-    "name": "humanmade/exit-popup",
-    "description": "An exit intent popup block that shows when someone may be about to leave the site",
-    "type": "wordpress-plugin",
-    "license": "GPL-2.0-or-later",
-    "authors": [
-        {
-            "name": "Robert O'Rourke",
-            "email": "robert@o-rourke.org"
-        }
-    ],
-    "require": {}
+	"name": "humanmade/popup",
+	"description": "An exit intent popup block that shows when someone may be about to leave the site",
+	"type": "wordpress-plugin",
+	"license": "GPL-2.0-or-later",
+	"authors": [
+		{
+			"name": "Human Made Limited",
+			"email": "engineering@humanmade.com"
+		}
+	],
+	"require": {
+		"composer/installers": "^2.3"
+	},
+	"config": {
+		"allow-plugins": {
+			"composer/installers": true
+		}
+	}
 }
