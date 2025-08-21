@@ -10,7 +10,7 @@
 		}
 	],
 	"require": {
-		"composer/installers": "^2.3"
+		"composer/installers": "^1 || ^2"
 	},
 	"config": {
 		"allow-plugins": {
