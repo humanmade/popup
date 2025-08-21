@@ -1,8 +1,8 @@
 === Exit Popup ===
 Contributors:      humanmade
 Tags:              block, popup, exit popup, marketing
-Tested up to:      6.6.1
-Stable tag:        0.1.2
+Tested up to:      6.8.2
+Stable tag:        0.1.3
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
