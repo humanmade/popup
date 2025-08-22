@@ -32,7 +32,7 @@ const bootstrap = () => {
 		// Handle click trigger.
 		if ( popup?.dataset.trigger === 'click' ) {
 			document
-				.querySelectorAll( `[href="#${ popup.id || '' }"]` )
+				.querySelectorAll( `[href$="#${ popup.id || 'open-popup' }"]` )
 				.forEach( ( trigger ) => {
 					trigger.addEventListener( 'click', ( event ) => {
 						event.preventDefault();
