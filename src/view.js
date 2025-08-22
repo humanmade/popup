@@ -70,7 +70,7 @@ const bootstrap = () => {
 		.querySelectorAll(
 			[
 				'.wp-block-hm-popup__close',
-				'.wp-block-hm-popup [href="#close"]',
+				'.wp-block-hm-popup [href$="#close"]',
 			].join( ',' )
 		)
 		.forEach( ( el ) => {

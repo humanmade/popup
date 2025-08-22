@@ -39,6 +39,7 @@ export default function Edit( { attributes, setAttributes } ) {
 			],
 		],
 		allowedBlocks: [ 'core/group' ],
+		templateLock: "insert"
 	} );
 
 	const [ hasCopied, setHasCopied ] = useState( false );

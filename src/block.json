@@ -2,16 +2,34 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "hm/popup",
-	"version": "1.0.0",
+	"version": "0.2.0",
 	"title": "Popup Block",
 	"category": "widgets",
 	"icon": "exit",
 	"description": "Popup wrapper block",
 	"example": {},
+	"allowedBlocks": [
+		"core/group"
+	],
 	"supports": {
 		"html": false,
 		"anchor": true,
-		"multiple": false
+		"multiple": true,
+		"layout": {
+			"default": {
+				"type": "constrained"
+			},
+			"allowJustification": false,
+			"allowEditing": true,
+			"allowCustomContentAndWideSize": true
+		},
+		"color": {
+			"background": true
+		},
+		"background": {
+			"backgroundImage": true,
+			"backgroundSize": true
+		}
 	},
 	"attributes": {
 		"opacity": {
@@ -31,7 +49,11 @@
 	"selectors": {
 		"root": ".wp-block-hm-popup",
 		"color": {
-			"background": ".wp-block-hm-popup > .wp-block-hm-popup__backdrop"
+			"background": ".wp-block-hm-popup::backdrop"
+		},
+		"background": {
+			"backgroundImage": ".wp-block-hm-popup::backdrop",
+			"backgroundSize": ".wp-block-hm-popup::backdrop"
 		}
 	},
 	"textdomain": "hm-popup",
