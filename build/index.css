@@ -1,1 +1,1 @@
-.wp-block-hm-popup{background-color:#0000004d;background-image:repeating-linear-gradient(45deg,#ffffff4d,#ffffff4d 10px,#0000004d 0,#0000004d 20px);height:auto;margin:0;opacity:1;padding:40px;position:relative;width:auto;z-index:1!important}
+.wp-block-hm-popup{background-color:#0000004d!important;background-image:repeating-linear-gradient(45deg,#ffffff4d,#ffffff4d 10px,#0000004d 0,#0000004d 20px)!important;height:auto;margin:0;max-height:max-content;opacity:1;padding:40px;position:relative;width:auto;z-index:1!important}

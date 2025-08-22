@@ -1,8 +1,8 @@
 {
-	"name": "exit-popup",
+	"name": "popup",
 	"private": true,
-	"description": "Example block scaffolded with Create Block tool.",
-	"author": "The WordPress Contributors",
+	"description": "Popup block for WordPress",
+	"author": "Human Made Limited",
 	"license": "GPL-2.0-or-later",
 	"main": "build/index.js",
 	"scripts": {
