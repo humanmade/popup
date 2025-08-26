@@ -34,19 +34,34 @@ export default function Edit( { attributes, setAttributes } ) {
 		template: [
 			[
 				'core/group',
-				{ lock: { remove: false } },
+				{
+					lock: {
+						move: true,
+						remove: true,
+					},
+					style: {
+						spacing: {
+							padding: {
+								top: "var:preset|spacing|40",
+								bottom: "var:preset|spacing|40",
+								left: "var:preset|spacing|40",
+								right: "var:preset|spacing|40",
+							},
+						},
+					},
+				},
 				[ [ 'core/paragraph' ] ],
 			],
 		],
 		allowedBlocks: [ 'core/group' ],
-		templateLock: "insert"
+		renderAppender: false,
 	} );
 
 	const [ hasCopied, setHasCopied ] = useState( false );
 
 	return (
 		<div { ...innerBlocksProps }>
-			<InspectorControls>
+			<InspectorControls group="default">
 				<PanelBody>
 					{ attributes.trigger === 'exit' && (
 						<p>
