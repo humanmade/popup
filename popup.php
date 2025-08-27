@@ -4,7 +4,7 @@
  * Description:       A container block that displays its contents as a popup.
  * Requires at least: 6.1
  * Requires PHP:      7.0
- * Version:           0.2.1
+ * Version:           0.2.2
  * Author:            Human Made Limited
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
@@ -50,11 +50,11 @@ add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_scripts' );
  * @return array[] Allowed HTML tags.
  */
 function filter_wp_kses_allowed_html( array $html, string $context ) : array {
-	$html['dialog'] = [
+	$html['dialog'] = _wp_add_global_attributes( [
 		'open' => [
 			'valueless' => 'y',
 		],
-	];
+	] );
 
 	return $html;
 }
