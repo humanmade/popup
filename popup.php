@@ -4,7 +4,7 @@
  * Description:       A container block that displays its contents as a popup.
  * Requires at least: 6.1
  * Requires PHP:      7.0
- * Version:           0.2.2
+ * Version:           0.3.0
  * Author:            Human Made Limited
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
@@ -14,6 +14,10 @@
  */
 
 namespace HM\Popup;
+
+use WP_HTML_Tag_Processor;
+use WP_Style_Engine;
+use WP_Style_Engine_CSS_Rule;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -60,3 +64,59 @@ function filter_wp_kses_allowed_html( array $html, string $context ) : array {
 }
 
 add_filter( 'wp_kses_allowed_html', __NAMESPACE__ . '\\filter_wp_kses_allowed_html', 10, 2 );
+
+/**
+ * Filters the content of the block.
+ *
+ * @param string    $block_content The block content.
+ * @param array     $block         The full block, including name and attributes.
+ * @param \WP_Block $instance      The block instance.
+ * @return string The block content.
+ */
+function filter_render_block( $block_content, $block, \WP_Block $instance ) {
+
+	$classname = 'wp-elements-' . md5( maybe_serialize( $block['attrs'] ) );
+
+	$style = WP_Style_Engine::compile_stylesheet_from_css_rules(
+		new WP_Style_Engine_CSS_Rule( ".{$classname}::backdrop", [
+			'opacity' => ( $block['attrs']['opacity'] ?? '75' ) . '%',
+			'background-color' => "var(--wp--preset--color--{$block['attrs']['backgroundColor']}) !important",
+			'background-image' => "url({$block['attrs']['style']['background']['url']})",
+			'background-size' => $block['attrs']['style']['background']['backgroundSize'] ?? 'cover',
+		] )
+	);
+
+	wp_enqueue_block_support_styles( $style );
+
+	$block_content = new WP_HTML_Tag_Processor( $block_content );
+	$block_content->next_tag();
+	$block_content->add_class( $classname );
+
+	return (string) $block_content;
+}
+
+add_filter( 'render_block_hm/popup', __NAMESPACE__ . '\\filter_render_block', 10, 3 );
+
+add_action( 'init', __NAMESPACE__ . '\\action_init' );
+
+/**
+ * Fires after WordPress has finished loading but before any headers are sent.
+ *
+ */
+function action_init() : void {
+	register_block_style(
+		'hm/popup',
+		[
+			'name' => 'side--left',
+			'label' => __( 'Left Side', 'hm-popup' ),
+		]
+	);
+
+	register_block_style(
+		'hm/popup',
+		[
+			'name' => 'side--right',
+			'label' => __( 'Right Side', 'hm-popup' ),
+		]
+	);
+}

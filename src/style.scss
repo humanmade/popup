@@ -4,6 +4,8 @@
 	transition:
 		opacity 150ms linear,
 		top 0s linear 150ms,
+		left 0s linear 150ms,
+		right 0s linear 150ms,
 		overlay 150ms linear allow-discrete,
 		display 150ms linear allow-discrete;
 	align-items: center;
@@ -18,10 +20,25 @@
 	background: none;
 	padding: 5vh 5vw;
 	margin: 0 auto;
+	margin-block-start: 0 !important;
+	margin-block-end: 0 !important;
+
+	&.is-style-side--left,
+	&.is-style-side--right {
+		padding: 0;
+	}
 
 	&[open] {
 		top: 0;
 		opacity: 1;
+	}
+
+	&[open].is-style-side--left {
+		right: 0;
+	}
+
+	&[open].is-style-side--right {
+		left: 0;
 	}
 
 	> * {
@@ -30,8 +47,23 @@
 		z-index: 2;
 		width: 100%;
 		background-color: rgb(255, 255, 255);
+		margin-block-start: 0 !important;
 		margin-top: 0 !important;
 		margin-bottom: 0 !important;
+	}
+
+	&.is-style-side--left > *,
+	&.is-style-side--right > * {
+		height: 100%;
+		overflow: auto;
+	}
+
+	&.is-style-side--left > * {
+		margin-left: 0 !important;
+	}
+
+	&.is-style-side--right > * {
+		margin-right: 0 !important;
 	}
 }
 
@@ -42,6 +74,18 @@
 	.wp-block-hm-popup[open] {
 		opacity: 0;
 		top: 100%;
+	}
+
+	.wp-block-hm-popup[open].is-style-side--left {
+		top: 0;
+		bottom: 0;
+		right: 100%;
+	}
+
+	.wp-block-hm-popup[open].is-style-side--right {
+		top: 0;
+		bottom: 0;
+		left: 100%;
 	}
 }
 

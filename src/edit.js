@@ -29,7 +29,19 @@ const TRIGGERS = [
  * @return {Element} Element to render.
  */
 export default function Edit( { attributes, setAttributes } ) {
-	const { ...blockProps } = useBlockProps();
+	// Manually handle background classes and styles because we're skipping automatic serialisation.
+	const { backgroundColor, style } = attributes;
+	const classNames = [];
+	const styles = {};
+	if ( backgroundColor ) {
+		classNames.push( `has-background-color has-${ backgroundColor }-background-color` );
+	}
+	if ( style?.background ) {
+		style.backgroundImage = `url(${ style.background?.url })`;
+		style.backgroundSize = style.background?.backgroundSize || 'cover';
+	}
+
+	const { ...blockProps } = useBlockProps( { className: classNames.join( ' ' ), style: styles } );
 	const { children, ...innerBlocksProps } = useInnerBlocksProps( blockProps, {
 		template: [
 			[
@@ -39,6 +51,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						move: true,
 						remove: true,
 					},
+					backgroundColor: 'white',
 					style: {
 						spacing: {
 							padding: {
@@ -96,29 +109,26 @@ export default function Edit( { attributes, setAttributes } ) {
 							label={ __( 'Anchor / ID', 'hm-popup' ) }
 							help={
 								<>
-									<p>
-										{ __(
-											'You can set any button or link url to the following value to trigger this popup:',
-											'hm-popup'
-										) }
-									</p>
-									<p>
-										<code>#{ attributes.anchor }</code>
-										<ClipboardButton
-											variant="secondary"
-											text={ `#${ attributes.anchor }` }
-											onCopy={ () =>
-												setHasCopied( true )
-											}
-											onFinishCopy={ () =>
-												setHasCopied( false )
-											}
-										>
-											{ hasCopied
-												? 'Copied!'
-												: 'Copy Text' }
-										</ClipboardButton>
-									</p>
+									{ __(
+										'You can set any button or link url to the following value to trigger this popup:',
+										'hm-popup'
+									) }
+									<br />
+									<code>#{ attributes.anchor }</code>
+									<ClipboardButton
+										variant="secondary"
+										text={ `#${ attributes.anchor }` }
+										onCopy={ () =>
+											setHasCopied( true )
+										}
+										onFinishCopy={ () =>
+											setHasCopied( false )
+										}
+									>
+										{ hasCopied
+											? 'Copied!'
+											: 'Copy Text' }
+									</ClipboardButton>
 								</>
 							}
 							value={ attributes.anchor || '' }
@@ -142,6 +152,20 @@ export default function Edit( { attributes, setAttributes } ) {
 							max={ 30 }
 						/>
 					) }
+				</PanelBody>
+			</InspectorControls>
+			<InspectorControls group="styles">
+				<PanelBody>
+					<RangeControl
+						label={ __( 'Backdrop opacity', 'hm-popup' ) }
+						value={ attributes.opacity }
+						onChange={ ( opacity ) =>
+							setAttributes( { opacity } )
+						}
+						min={ 0 }
+						max={ 100 }
+						step={ 1 }
+					/>
 				</PanelBody>
 			</InspectorControls>
 			{ children }

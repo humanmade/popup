@@ -1,12 +1,13 @@
 // stylelint-disable function-comma-space-after
 .wp-block-hm-popup {
 	position: relative;
+	top: 0 !important;
 	width: auto;
 	height: auto;
 	max-height: max-content;
 	opacity: 1;
 	margin: 0;
-	padding: 40px;
+	padding: 40px !important;
 	background-color: rgba(0, 0, 0, 0.3) !important;
 	background-image:
 		repeating-linear-gradient(45deg,
