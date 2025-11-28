@@ -15,6 +15,8 @@ const mouseEvent = ( e ) => {
 const bootstrap = () => {
 	let exitIntentSetup = false;
 	document.querySelectorAll( '.wp-block-hm-popup' ).forEach( ( popup ) => {
+		// Block selectors API doesn't work so we need to
+
 		// On close remove HTML class.
 		popup.addEventListener( 'close', () => {
 			document
