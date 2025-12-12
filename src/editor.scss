@@ -12,3 +12,55 @@
 	background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3) 10px, rgba(0, 0, 0, 0.3) 10px, rgba(0, 0, 0, 0.3) 20px) !important;
 	z-index: 1 !important;
 }
+
+/* Anchor position grid control */
+.hm-popup-anchor-position-grid {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	padding: 8px;
+	background: #f0f0f0;
+	border-radius: 4px;
+	margin-top: 8px;
+}
+
+.hm-popup-anchor-position-row {
+	display: flex;
+	justify-content: center;
+	gap: 2px;
+}
+
+.hm-popup-anchor-position-button {
+	width: 36px;
+	height: 36px;
+	min-width: 36px;
+	padding: 2px;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	background: #fff;
+	color: #757575;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	&:hover {
+		background: #e0e0e0;
+		color: #1e1e1e;
+	}
+
+	&.is-selected {
+		background: var(--wp-admin-theme-color, #007cba);
+		color: #fff;
+		border-color: var(--wp-admin-theme-color, #007cba);
+	}
+}
+
+.hm-popup-anchor-position-center {
+	width: 36px;
+	height: 36px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #757575;
+}

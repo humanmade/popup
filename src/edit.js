@@ -1,10 +1,12 @@
-import { useState } from '@wordpress/element';
+import { useState, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import { useSelect, useDispatch } from '@wordpress/data';
 
 import {
 	useBlockProps,
 	useInnerBlocksProps,
 	InspectorControls,
+	store as blockEditorStore,
 } from '@wordpress/block-editor';
 
 import {
@@ -13,6 +15,8 @@ import {
 	RangeControl,
 	SelectControl,
 	TextControl,
+	Button,
+	BaseControl,
 } from '@wordpress/components';
 
 import './editor.scss';
@@ -22,28 +26,201 @@ const TRIGGERS = [
 	{ value: 'exit', label: __( 'On exit intent', 'hm-popup' ) },
 ];
 
-const ANCHOR_POSITIONS = [
-	{ value: 'bottom', label: __( 'Bottom', 'hm-popup' ) },
-	{ value: 'bottom-start', label: __( 'Bottom Start', 'hm-popup' ) },
-	{ value: 'bottom-end', label: __( 'Bottom End', 'hm-popup' ) },
-	{ value: 'top', label: __( 'Top', 'hm-popup' ) },
-	{ value: 'top-start', label: __( 'Top Start', 'hm-popup' ) },
-	{ value: 'top-end', label: __( 'Top End', 'hm-popup' ) },
-	{ value: 'left', label: __( 'Left', 'hm-popup' ) },
-	{ value: 'left-start', label: __( 'Left Start', 'hm-popup' ) },
-	{ value: 'left-end', label: __( 'Left End', 'hm-popup' ) },
-	{ value: 'right', label: __( 'Right', 'hm-popup' ) },
-	{ value: 'right-start', label: __( 'Right Start', 'hm-popup' ) },
-	{ value: 'right-end', label: __( 'Right End', 'hm-popup' ) },
-];
+/**
+ * SVG icon component for anchor position visualization.
+ * Shows a button (square) and popup (rectangle) in the specified position.
+ *
+ * @param {Object} props
+ * @param {string} props.position - The anchor position value.
+ * @return {Element} SVG element.
+ */
+const AnchorPositionIcon = ( { position } ) => {
+	// Button position (center of the grid)
+	const buttonX = 12;
+	const buttonY = 12;
+	const buttonSize = 8;
+
+	// Calculate popup position based on anchor position
+	const popupWidth = 10;
+	const popupHeight = 6;
+	let popupX, popupY;
+
+	switch ( position ) {
+		case 'top':
+			popupX = buttonX + buttonSize / 2 - popupWidth / 2;
+			popupY = buttonY - popupHeight - 1;
+			break;
+		case 'top-start':
+			popupX = buttonX;
+			popupY = buttonY - popupHeight - 1;
+			break;
+		case 'top-end':
+			popupX = buttonX + buttonSize - popupWidth;
+			popupY = buttonY - popupHeight - 1;
+			break;
+		case 'bottom':
+			popupX = buttonX + buttonSize / 2 - popupWidth / 2;
+			popupY = buttonY + buttonSize + 1;
+			break;
+		case 'bottom-start':
+			popupX = buttonX;
+			popupY = buttonY + buttonSize + 1;
+			break;
+		case 'bottom-end':
+			popupX = buttonX + buttonSize - popupWidth;
+			popupY = buttonY + buttonSize + 1;
+			break;
+		case 'left':
+			popupX = buttonX - popupWidth - 1;
+			popupY = buttonY + buttonSize / 2 - popupHeight / 2;
+			break;
+		case 'left-start':
+			popupX = buttonX - popupWidth - 1;
+			popupY = buttonY;
+			break;
+		case 'left-end':
+			popupX = buttonX - popupWidth - 1;
+			popupY = buttonY + buttonSize - popupHeight;
+			break;
+		case 'right':
+			popupX = buttonX + buttonSize + 1;
+			popupY = buttonY + buttonSize / 2 - popupHeight / 2;
+			break;
+		case 'right-start':
+			popupX = buttonX + buttonSize + 1;
+			popupY = buttonY;
+			break;
+		case 'right-end':
+			popupX = buttonX + buttonSize + 1;
+			popupY = buttonY + buttonSize - popupHeight;
+			break;
+		default:
+			popupX = buttonX + buttonSize / 2 - popupWidth / 2;
+			popupY = buttonY + buttonSize + 1;
+	}
+
+	return (
+		<svg
+			width="32"
+			height="32"
+			viewBox="0 0 32 32"
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg"
+		>
+			{ /* Button (trigger) */ }
+			<rect
+				x={ buttonX }
+				y={ buttonY }
+				width={ buttonSize }
+				height={ buttonSize }
+				rx="1"
+				fill="currentColor"
+				opacity="0.6"
+			/>
+			{ /* Popup */ }
+			<rect
+				x={ popupX }
+				y={ popupY }
+				width={ popupWidth }
+				height={ popupHeight }
+				rx="1"
+				fill="currentColor"
+			/>
+		</svg>
+	);
+};
+
+/**
+ * Visual anchor position picker component.
+ *
+ * @param {Object}   props
+ * @param {string}   props.value    - Current anchor position value.
+ * @param {Function} props.onChange - Callback when position changes.
+ * @return {Element} Component element.
+ */
+const AnchorPositionControl = ( { value, onChange } ) => {
+	const positions = [
+		[ 'top-start', 'top', 'top-end' ],
+		[ 'left-start', null, 'right-start' ],
+		[ 'left', null, 'right' ],
+		[ 'left-end', null, 'right-end' ],
+		[ 'bottom-start', 'bottom', 'bottom-end' ],
+	];
+
+	return (
+		<BaseControl
+			id="hm-popup-anchor-position"
+			label={ __( 'Anchor Position', 'hm-popup' ) }
+			help={ __(
+				'Choose where the popup appears relative to the trigger button.',
+				'hm-popup'
+			) }
+			__nextHasNoMarginBottom
+		>
+			<div className="hm-popup-anchor-position-grid">
+				{ positions.map( ( row, rowIndex ) => (
+					<div
+						key={ rowIndex }
+						className="hm-popup-anchor-position-row"
+					>
+						{ row.map( ( position, colIndex ) =>
+							position ? (
+								<Button
+									key={ position }
+									className={ `hm-popup-anchor-position-button ${
+										value === position ? 'is-selected' : ''
+									}` }
+									onClick={ () => onChange( position ) }
+									label={ position
+										.split( '-' )
+										.map(
+											( word ) =>
+												word.charAt( 0 ).toUpperCase() +
+												word.slice( 1 )
+										)
+										.join( ' ' ) }
+								>
+									<AnchorPositionIcon position={ position } />
+								</Button>
+							) : (
+								<div
+									key={ `empty-${ rowIndex }-${ colIndex }` }
+									className="hm-popup-anchor-position-center"
+								>
+									<svg
+										width="32"
+										height="32"
+										viewBox="0 0 32 32"
+										fill="none"
+									>
+										<rect
+											x="12"
+											y="12"
+											width="8"
+											height="8"
+											rx="1"
+											fill="currentColor"
+											opacity="0.3"
+										/>
+									</svg>
+								</div>
+							)
+						) }
+					</div>
+				) ) }
+			</div>
+		</BaseControl>
+	);
+};
 
 /**
  * @param {Object}   props
  * @param {Object}   props.attributes
  * @param {Function} props.setAttributes
+ * @param {string}   props.clientId
  * @return {Element} Element to render.
  */
-export default function Edit( { attributes, setAttributes } ) {
+export default function Edit( { attributes, setAttributes, clientId } ) {
 	// Manually handle background classes and styles because we're skipping automatic serialisation.
 	const { backgroundColor, style } = attributes;
 	const classNames = [];
@@ -57,6 +234,34 @@ export default function Edit( { attributes, setAttributes } ) {
 		style.backgroundImage = `url(${ style.background?.url })`;
 		style.backgroundSize = style.background?.backgroundSize || 'cover';
 	}
+
+	const isAnchored = attributes.className?.includes( 'is-style-anchored' );
+
+	// Get inner blocks to check/update contentSize
+	const innerBlocks = useSelect(
+		( select ) => select( blockEditorStore ).getBlocks( clientId ),
+		[ clientId ]
+	);
+	const { updateBlockAttributes } = useDispatch( blockEditorStore );
+
+	// When anchored style is applied, set default contentSize on inner group block
+	useEffect( () => {
+		if ( isAnchored && innerBlocks.length > 0 ) {
+			const groupBlock = innerBlocks[ 0 ];
+			if (
+				groupBlock.name === 'core/group' &&
+				! groupBlock.attributes.layout?.contentSize
+			) {
+				updateBlockAttributes( groupBlock.clientId, {
+					layout: {
+						...groupBlock.attributes.layout,
+						type: 'constrained',
+						contentSize: '300px',
+					},
+				} );
+			}
+		}
+	}, [ isAnchored, innerBlocks, updateBlockAttributes ] );
 
 	const { ...blockProps } = useBlockProps( {
 		className: classNames.join( ' ' ),
@@ -180,14 +385,8 @@ export default function Edit( { attributes, setAttributes } ) {
 						max={ 100 }
 						step={ 1 }
 					/>
-					{ attributes.className?.includes( 'is-style-anchored' ) && (
-						<SelectControl
-							label={ __( 'Anchor Position', 'hm-popup' ) }
-							help={ __(
-								'Choose where the popup appears relative to the trigger button.',
-								'hm-popup'
-							) }
-							options={ ANCHOR_POSITIONS }
+					{ isAnchored && (
+						<AnchorPositionControl
 							value={ attributes.anchorPosition || 'bottom' }
 							onChange={ ( anchorPosition ) =>
 								setAttributes( { anchorPosition } )
