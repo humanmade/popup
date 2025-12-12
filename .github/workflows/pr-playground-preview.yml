@@ -52,10 +52,6 @@ jobs:
                   {
                     "landingPage": "/wp-admin/",
                     "login": true,
-                    "preferredVersions": {
-                      "php": "8.3",
-                      "wp": "6.8"
-                    },
                     "steps": [
                       {
                         "step": "installTheme",
@@ -69,9 +65,9 @@ jobs:
                       },
                       {
                         "step": "installPlugin",
-                        "pluginData": {
+                        "pluginZipFile": {
                           "resource": "url",
-                          "url": "https://github-proxy.com/proxy/?repo=REPO&branch=BRANCH"
+                          "url": "https://github.com/${{ github.repository }}/archive/refs/heads/pr-${{ github.event.pull_request.number }}-built.zip"
                         }
                       },
                       {
@@ -86,8 +82,6 @@ jobs:
                   }
                   EOF
                   )
-                  BLUEPRINT=$(echo "$BLUEPRINT" | sed "s|REPO|${{ github.repository }}|g")
-                  BLUEPRINT=$(echo "$BLUEPRINT" | sed "s|BRANCH|pr-${{ github.event.pull_request.number }}-built|g")
                   echo "blueprint=$(echo $BLUEPRINT | jq -c .)" >> $GITHUB_OUTPUT
 
             - name: Add Playground preview
