@@ -1,97 +1,97 @@
 name: PR Playground Preview
 
 on:
-  pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
-      - edited
+    pull_request:
+        types:
+            - opened
+            - synchronize
+            - reopened
+            - edited
 
 permissions:
-  contents: write
-  pull-requests: write
+    contents: write
+    pull-requests: write
 
 jobs:
-  preview:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+    preview:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-          cache: 'npm'
+            - name: Setup Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '24'
+                  cache: 'npm'
 
-      - name: Install dependencies
-        run: npm i
+            - name: Install dependencies
+              run: npm i
 
-      - name: Update version placeholder
-        run: |
-          sed -i "s/__VERSION__/Pull Request #${{ github.event.pull_request.number }} - ${{ github.event.pull_request.title }}/g" popup.php
+            - name: Update version placeholder
+              run: |
+                  sed -i "s/__VERSION__/Pull Request #${{ github.event.pull_request.number }} - ${{ github.event.pull_request.title }}/g" popup.php
 
-      - name: Build
-        run: npm run build
+            - name: Build
+              run: npm run build
 
-      - name: Push built files to PR branch
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git checkout -B pr-${{ github.event.pull_request.number }}-built
-          git add -f build/
-          git add popup.php
-          git commit -m "Build for PR #${{ github.event.pull_request.number }} - ${{ github.sha }}"
-          git push origin pr-${{ github.event.pull_request.number }}-built --force
+            - name: Push built files to PR branch
+              run: |
+                  git config user.name "github-actions[bot]"
+                  git config user.email "github-actions[bot]@users.noreply.github.com"
+                  git checkout -B pr-${{ github.event.pull_request.number }}-built
+                  git add -f build/
+                  git add popup.php
+                  git commit -m "Build for PR #${{ github.event.pull_request.number }} - ${{ github.sha }}"
+                  git push origin pr-${{ github.event.pull_request.number }}-built --force
 
-      - name: Create preview blueprint
-        id: blueprint
-        run: |
-          BLUEPRINT=$(cat <<'EOF'
-          {
-            "landingPage": "/wp-admin/",
-            "login": true,
-            "preferredVersions": {
-              "php": "8.3",
-              "wp": "6.8"
-            },
-            "steps": [
-              {
-                "step": "installTheme",
-                "themeData": {
-                  "resource": "wordpress.org/themes",
-                  "slug": "twentytwentyfive"
-                },
-                "options": {
-                  "activate": true
-                }
-              },
-              {
-                "step": "installPlugin",
-                "pluginData": {
-                  "resource": "url",
-                  "url": "https://github-proxy.com/proxy/?repo=REPO&branch=BRANCH"
-                }
-              },
-              {
-                "step": "defineWpConfigConsts",
-                "consts": {
-                  "WP_DEBUG": true,
-                  "WP_DEBUG_LOG": true,
-                  "SCRIPT_DEBUG": true
-                }
-              }
-            ]
-          }
-          EOF
-          )
-          BLUEPRINT=$(echo "$BLUEPRINT" | sed "s|REPO|${{ github.repository }}|g")
-          BLUEPRINT=$(echo "$BLUEPRINT" | sed "s|BRANCH|pr-${{ github.event.pull_request.number }}-built|g")
-          echo "blueprint=$(echo $BLUEPRINT | jq -c .)" >> $GITHUB_OUTPUT
+            - name: Create preview blueprint
+              id: blueprint
+              run: |
+                  BLUEPRINT=$(cat <<'EOF'
+                  {
+                    "landingPage": "/wp-admin/",
+                    "login": true,
+                    "preferredVersions": {
+                      "php": "8.3",
+                      "wp": "6.8"
+                    },
+                    "steps": [
+                      {
+                        "step": "installTheme",
+                        "themeData": {
+                          "resource": "wordpress.org/themes",
+                          "slug": "twentytwentyfive"
+                        },
+                        "options": {
+                          "activate": true
+                        }
+                      },
+                      {
+                        "step": "installPlugin",
+                        "pluginData": {
+                          "resource": "url",
+                          "url": "https://github-proxy.com/proxy/?repo=REPO&branch=BRANCH"
+                        }
+                      },
+                      {
+                        "step": "defineWpConfigConsts",
+                        "consts": {
+                          "WP_DEBUG": true,
+                          "WP_DEBUG_LOG": true,
+                          "SCRIPT_DEBUG": true
+                        }
+                      }
+                    ]
+                  }
+                  EOF
+                  )
+                  BLUEPRINT=$(echo "$BLUEPRINT" | sed "s|REPO|${{ github.repository }}|g")
+                  BLUEPRINT=$(echo "$BLUEPRINT" | sed "s|BRANCH|pr-${{ github.event.pull_request.number }}-built|g")
+                  echo "blueprint=$(echo $BLUEPRINT | jq -c .)" >> $GITHUB_OUTPUT
 
-      - name: Add Playground preview
-        uses: WordPress/action-wp-playground-pr-preview@v2
-        with:
-          blueprint: ${{ steps.blueprint.outputs.blueprint }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+            - name: Add Playground preview
+              uses: WordPress/action-wp-playground-pr-preview@v2
+              with:
+                  blueprint: ${{ steps.blueprint.outputs.blueprint }}
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
