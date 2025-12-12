@@ -1,0 +1,31 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Build and merge to release
+        uses: humanmade/actions/build-merge-to-branch@main
+        with:
+          target-branch: release
+          install-command: npm i
+          build-command: npm run build
+          build-directories: build
