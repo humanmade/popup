@@ -30,6 +30,9 @@
 			"backgroundImage": true,
 			"backgroundSize": true,
 			"__experimentalSkipSerialization": true
+		},
+		"spacing": {
+			"padding": true
 		}
 	},
 	"attributes": {
