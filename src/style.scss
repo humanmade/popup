@@ -68,9 +68,11 @@
 }
 
 /* Before-open state */
+
 /* Needs to be after the previous dialog[open] rule to take effect,
     as the specificity is the same */
 @starting-style {
+
 	.wp-block-hm-popup[open] {
 		opacity: 0;
 		top: 100%;
@@ -89,7 +91,8 @@
 	}
 }
 
-/* Transition the :backdrop when the dialog modal is promoted to the top layer */
+/* Transition the :backdrop when the dialog modal is promoted to
+  the top layer */
 .wp-block-hm-popup::backdrop {
 	background-color: rgba(0, 0, 0, 0%);
 	transition:
@@ -105,6 +108,7 @@
 /* This starting-style rule cannot be nested inside the above selector
   because the nesting selector cannot represent pseudo-elements. */
 @starting-style {
+
 	.wp-block-hm-popup[open]::backdrop {
 		background-color: rgba(0, 0, 0, 0%);
 	}

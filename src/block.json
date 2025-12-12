@@ -7,9 +7,7 @@
 	"icon": "exit",
 	"description": "Popup wrapper block",
 	"example": {},
-	"allowedBlocks": [
-		"core/group"
-	],
+	"allowedBlocks": [ "core/group" ],
 	"supports": {
 		"html": false,
 		"anchor": true,

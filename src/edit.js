@@ -34,14 +34,19 @@ export default function Edit( { attributes, setAttributes } ) {
 	const classNames = [];
 	const styles = {};
 	if ( backgroundColor ) {
-		classNames.push( `has-background-color has-${ backgroundColor }-background-color` );
+		classNames.push(
+			`has-background-color has-${ backgroundColor }-background-color`
+		);
 	}
 	if ( style?.background ) {
 		style.backgroundImage = `url(${ style.background?.url })`;
 		style.backgroundSize = style.background?.backgroundSize || 'cover';
 	}
 
-	const { ...blockProps } = useBlockProps( { className: classNames.join( ' ' ), style: styles } );
+	const { ...blockProps } = useBlockProps( {
+		className: classNames.join( ' ' ),
+		style: styles,
+	} );
 	const { children, ...innerBlocksProps } = useInnerBlocksProps( blockProps, {
 		template: [
 			[
@@ -55,10 +60,10 @@ export default function Edit( { attributes, setAttributes } ) {
 					style: {
 						spacing: {
 							padding: {
-								top: "var:preset|spacing|40",
-								bottom: "var:preset|spacing|40",
-								left: "var:preset|spacing|40",
-								right: "var:preset|spacing|40",
+								top: 'var:preset|spacing|40',
+								bottom: 'var:preset|spacing|40',
+								left: 'var:preset|spacing|40',
+								right: 'var:preset|spacing|40',
 							},
 						},
 					},
@@ -118,16 +123,12 @@ export default function Edit( { attributes, setAttributes } ) {
 									<ClipboardButton
 										variant="secondary"
 										text={ `#${ attributes.anchor }` }
-										onCopy={ () =>
-											setHasCopied( true )
-										}
+										onCopy={ () => setHasCopied( true ) }
 										onFinishCopy={ () =>
 											setHasCopied( false )
 										}
 									>
-										{ hasCopied
-											? 'Copied!'
-											: 'Copy Text' }
+										{ hasCopied ? 'Copied!' : 'Copy Text' }
 									</ClipboardButton>
 								</>
 							}
@@ -159,9 +160,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					<RangeControl
 						label={ __( 'Backdrop opacity', 'hm-popup' ) }
 						value={ attributes.opacity }
-						onChange={ ( opacity ) =>
-							setAttributes( { opacity } )
-						}
+						onChange={ ( opacity ) => setAttributes( { opacity } ) }
 						min={ 0 }
 						max={ 100 }
 						step={ 1 }
