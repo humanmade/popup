@@ -26,13 +26,13 @@ test.describe( 'Popup Block Anchoring', () => {
 			],
 		} );
 
-		// Insert a popup block with anchoring enabled
+		// Insert a popup block with anchored style
 		await editor.insertBlock( {
 			name: 'hm/popup',
 			attributes: {
 				anchor: 'test-anchored-popup',
 				trigger: 'click',
-				useCssAnchoring: true,
+				className: 'is-style-anchored',
 				anchorPosition: 'bottom',
 			},
 		} );
@@ -69,8 +69,8 @@ test.describe( 'Popup Block Anchoring', () => {
 		// Verify the popup is now open
 		await expect( dialog ).toHaveAttribute( 'open' );
 
-		// Verify the popup has anchoring classes/attributes
-		await expect( dialog ).toHaveClass( /is-anchored/ );
+		// Verify the popup has anchored style class
+		await expect( dialog ).toHaveClass( /is-style-anchored/ );
 		await expect( dialog ).toHaveAttribute(
 			'data-anchor-position-active',
 			'bottom'
@@ -119,7 +119,7 @@ test.describe( 'Popup Block Anchoring', () => {
 			attributes: {
 				anchor: 'test-right-popup',
 				trigger: 'click',
-				useCssAnchoring: true,
+				className: 'is-style-anchored',
 				anchorPosition: 'right',
 			},
 		} );

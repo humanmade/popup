@@ -10,6 +10,8 @@ export default function save( { attributes } ) {
 	const { children, ...innerBlocksProps } =
 		useInnerBlocksProps.save( blockProps );
 
+	const isAnchored = attributes.className?.includes( 'is-style-anchored' );
+
 	return (
 		<dialog
 			{ ...innerBlocksProps }
@@ -17,11 +19,8 @@ export default function save( { attributes } ) {
 			data-expiry={ attributes.cookieExpiration }
 			data-backdrop-opacity={ ( attributes.opacity || 1 ) / 100 }
 			data-backdrop-color={ attributes.backgroundColor }
-			data-use-css-anchoring={ attributes.useCssAnchoring || undefined }
 			data-anchor-position={
-				attributes.useCssAnchoring
-					? attributes.anchorPosition || 'bottom'
-					: undefined
+				isAnchored ? attributes.anchorPosition || 'bottom' : undefined
 			}
 		>
 			{ children }

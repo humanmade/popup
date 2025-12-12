@@ -13,7 +13,6 @@ import {
 	RangeControl,
 	SelectControl,
 	TextControl,
-	ToggleControl,
 } from '@wordpress/components';
 
 import './editor.scss';
@@ -154,34 +153,6 @@ export default function Edit( { attributes, setAttributes } ) {
 							}
 						/>
 					) }
-					{ attributes.trigger === 'click' && (
-						<ToggleControl
-							label={ __( 'Use Anchoring', 'hm-popup' ) }
-							help={ __(
-								'Position the popup relative to the button that triggered it.',
-								'hm-popup'
-							) }
-							checked={ attributes.useCssAnchoring }
-							onChange={ ( useCssAnchoring ) =>
-								setAttributes( { useCssAnchoring } )
-							}
-						/>
-					) }
-					{ attributes.trigger === 'click' &&
-						attributes.useCssAnchoring && (
-							<SelectControl
-								label={ __( 'Anchor Position', 'hm-popup' ) }
-								help={ __(
-									'Choose where the popup appears relative to the trigger button.',
-									'hm-popup'
-								) }
-								options={ ANCHOR_POSITIONS }
-								value={ attributes.anchorPosition || 'bottom' }
-								onChange={ ( anchorPosition ) =>
-									setAttributes( { anchorPosition } )
-								}
-							/>
-						) }
 					{ attributes.trigger === 'exit' && (
 						<RangeControl
 							label={ __( 'Cookie expiration', 'hm-popup' ) }
@@ -209,6 +180,20 @@ export default function Edit( { attributes, setAttributes } ) {
 						max={ 100 }
 						step={ 1 }
 					/>
+					{ attributes.className?.includes( 'is-style-anchored' ) && (
+						<SelectControl
+							label={ __( 'Anchor Position', 'hm-popup' ) }
+							help={ __(
+								'Choose where the popup appears relative to the trigger button.',
+								'hm-popup'
+							) }
+							options={ ANCHOR_POSITIONS }
+							value={ attributes.anchorPosition || 'bottom' }
+							onChange={ ( anchorPosition ) =>
+								setAttributes( { anchorPosition } )
+							}
+						/>
+					) }
 				</PanelBody>
 			</InspectorControls>
 			{ children }

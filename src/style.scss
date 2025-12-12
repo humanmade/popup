@@ -23,6 +23,10 @@
 	margin-block-start: 0 !important;
 	margin-block-end: 0 !important;
 
+	&:focus {
+		outline: none;
+	}
+
 	&.is-style-side--left,
 	&.is-style-side--right {
 		padding: 0;
@@ -115,14 +119,14 @@
 }
 
 /* CSS Anchor Positioning styles */
-.wp-block-hm-popup.is-anchored {
+.wp-block-hm-popup.is-style-anchored {
 	/* Reset fullscreen modal styles for anchored popups */
-	width: auto;
-	height: auto;
+	width: fit-content;
+	height: fit-content;
 	max-width: none;
 	max-height: none;
 	padding: 0;
-	margin: 0;
+	margin: 0 !important;
 	overflow: visible;
 	align-items: stretch;
 
@@ -220,17 +224,11 @@
 		top: auto;
 		translate: 0 0;
 	}
-
-	/* Anchored popup content styles */
-	> * {
-		max-width: none;
-		width: auto;
-	}
 }
 
 /* Anchored popup animation starting styles */
 @starting-style {
-	.wp-block-hm-popup[open].is-anchored {
+	.wp-block-hm-popup[open].is-style-anchored {
 		opacity: 0;
 	}
 }

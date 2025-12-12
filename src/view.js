@@ -25,13 +25,10 @@ const applyCssAnchorPositioning = ( popup, trigger ) => {
 	// Set the anchor-name on the trigger element.
 	trigger.style.anchorName = anchorName;
 
-	// Add anchored class to popup.
-	popup.classList.add( 'is-anchored' );
-
 	// Set the position-anchor on the popup.
 	popup.style.positionAnchor = anchorName;
 
-	// Store position as a CSS custom property for use in stylesheet.
+	// Store position as a data attribute for use in stylesheet.
 	popup.dataset.anchorPositionActive = position;
 };
 
@@ -56,7 +53,7 @@ const bootstrap = () => {
 
 		// Handle click trigger.
 		if ( popup?.dataset.trigger === 'click' ) {
-			const useCssAnchoring = popup.dataset.useCssAnchoring === 'true';
+			const isAnchored = popup.classList.contains( 'is-style-anchored' );
 
 			document
 				.querySelectorAll( `[href$="#${ popup.id || 'open-popup' }"]` )
@@ -67,8 +64,8 @@ const bootstrap = () => {
 							.querySelector( 'html' )
 							.classList.add( 'has-modal-open' );
 
-						// Apply CSS anchor positioning if enabled.
-						if ( useCssAnchoring ) {
+						// Apply CSS anchor positioning if anchored style is active.
+						if ( isAnchored ) {
 							applyCssAnchorPositioning( popup, trigger );
 						}
 

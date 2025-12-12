@@ -119,4 +119,12 @@ function action_init() : void {
 			'label' => __( 'Right Side', 'hm-popup' ),
 		]
 	);
+
+	register_block_style(
+		'hm/popup',
+		[
+			'name' => 'anchored',
+			'label' => __( 'Anchored', 'hm-popup' ),
+		]
+	);
 }
