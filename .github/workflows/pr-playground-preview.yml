@@ -50,7 +50,7 @@ jobs:
               run: |
                   BLUEPRINT=$(cat <<'EOF'
                   {
-                    "landingPage": "/wp-admin/",
+                    "landingPage": "/wp-admin/site-editor.php",
                     "login": true,
                     "steps": [
                       {
@@ -67,15 +67,7 @@ jobs:
                         "step": "installPlugin",
                         "pluginZipFile": {
                           "resource": "url",
-                          "url": "https://github.com/${{ github.repository }}/archive/refs/heads/pr-${{ github.event.pull_request.number }}-built.zip"
-                        }
-                      },
-                      {
-                        "step": "defineWpConfigConsts",
-                        "consts": {
-                          "WP_DEBUG": true,
-                          "WP_DEBUG_LOG": true,
-                          "SCRIPT_DEBUG": true
+                          "url": "https://github-proxy.com/proxy/?repo=${{ github.repository }}&branch=pr-${{ github.event.pull_request.number }}-built"
                         }
                       }
                     ]
