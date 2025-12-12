@@ -18,7 +18,11 @@ export default function save( { attributes } ) {
 			data-backdrop-opacity={ ( attributes.opacity || 1 ) / 100 }
 			data-backdrop-color={ attributes.backgroundColor }
 			data-use-css-anchoring={ attributes.useCssAnchoring || undefined }
-			data-anchor-position={ attributes.useCssAnchoring ? ( attributes.anchorPosition || 'bottom' ) : undefined }
+			data-anchor-position={
+				attributes.useCssAnchoring
+					? attributes.anchorPosition || 'bottom'
+					: undefined
+			}
 		>
 			{ children }
 		</dialog>

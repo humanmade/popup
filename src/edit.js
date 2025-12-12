@@ -167,20 +167,21 @@ export default function Edit( { attributes, setAttributes } ) {
 							}
 						/>
 					) }
-					{ attributes.trigger === 'click' && attributes.useCssAnchoring && (
-						<SelectControl
-							label={ __( 'Anchor Position', 'hm-popup' ) }
-							help={ __(
-								'Choose where the popup appears relative to the trigger button.',
-								'hm-popup'
-							) }
-							options={ ANCHOR_POSITIONS }
-							value={ attributes.anchorPosition || 'bottom' }
-							onChange={ ( anchorPosition ) =>
-								setAttributes( { anchorPosition } )
-							}
-						/>
-					) }
+					{ attributes.trigger === 'click' &&
+						attributes.useCssAnchoring && (
+							<SelectControl
+								label={ __( 'Anchor Position', 'hm-popup' ) }
+								help={ __(
+									'Choose where the popup appears relative to the trigger button.',
+									'hm-popup'
+								) }
+								options={ ANCHOR_POSITIONS }
+								value={ attributes.anchorPosition || 'bottom' }
+								onChange={ ( anchorPosition ) =>
+									setAttributes( { anchorPosition } )
+								}
+							/>
+						) }
 					{ attributes.trigger === 'exit' && (
 						<RangeControl
 							label={ __( 'Cookie expiration', 'hm-popup' ) }
