@@ -45,11 +45,52 @@ jobs:
           git commit -m "Build for PR #${{ github.event.pull_request.number }} - ${{ github.sha }}"
           git push origin pr-${{ github.event.pull_request.number }}-built --force
 
+      - name: Create preview blueprint
+        id: blueprint
+        run: |
+          BLUEPRINT=$(cat <<'EOF'
+          {
+            "landingPage": "/wp-admin/",
+            "login": true,
+            "preferredVersions": {
+              "php": "8.3",
+              "wp": "6.8"
+            },
+            "steps": [
+              {
+                "step": "installTheme",
+                "themeData": {
+                  "resource": "wordpress.org/themes",
+                  "slug": "twentytwentyfive"
+                },
+                "options": {
+                  "activate": true
+                }
+              },
+              {
+                "step": "installPlugin",
+                "pluginData": {
+                  "resource": "url",
+                  "url": "https://github-proxy.com/proxy/?repo=REPO&branch=BRANCH"
+                }
+              },
+              {
+                "step": "defineWpConfigConsts",
+                "consts": {
+                  "WP_DEBUG": true,
+                  "WP_DEBUG_LOG": true,
+                  "SCRIPT_DEBUG": true
+                }
+              }
+            ]
+          }
+          EOF
+          )
+          BLUEPRINT=$(echo "$BLUEPRINT" | sed "s|REPO|${{ github.repository }}|g")
+          BLUEPRINT=$(echo "$BLUEPRINT" | sed "s|BRANCH|pr-${{ github.event.pull_request.number }}-built|g")
+          echo "blueprint=$(echo $BLUEPRINT | jq -c .)" >> $GITHUB_OUTPUT
+
       - name: Add Playground preview
-        uses: WordPress/playground-tools/github-actions/playground-preview@trunk
+        uses: WordPress/action-wp-playground-pr-preview@v2
         with:
-          blueprint-url: >-
-            https://raw.githubusercontent.com/${{ github.repository }}/pr-${{ github.event.pull_request.number }}-built/blueprint.json
-          login: true
-          theme-slug: twentytwentyfive
-          plugin-slug: popup
+          blueprint: ${{ steps.blueprint.outputs.blueprint }}
