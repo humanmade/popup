@@ -37,11 +37,7 @@ test.describe( 'Popup Block Anchoring', () => {
 			},
 		} );
 
-		// Add some content to the popup's inner group block
-		const popupBlock = await editor.getBlocks();
-		const popup = popupBlock.find( ( block ) => block.name === 'hm/popup' );
-
-		// Click on the popup block to select it
+		// Click on the popup block to select it and add content
 		const popupElement = page.locator(
 			'.wp-block-hm-popup .wp-block-group'
 		);
