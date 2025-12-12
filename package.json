@@ -13,7 +13,7 @@
 		"packages-update": "wp-scripts packages-update",
 		"plugin-zip": "wp-scripts plugin-zip",
 		"start": "wp-scripts start",
-		"playground:start": "wp-now start --blueprint=blueprint.json --port=9400",
+		"playground:start": "npx --yes @wp-playground/cli@latest server --blueprint=blueprint.json --port=9400 --auto-mount",
 		"test:e2e": "playwright test",
 		"test:e2e:debug": "playwright test --debug",
 		"test:e2e:watch": "playwright test --ui"
@@ -21,6 +21,6 @@
 	"devDependencies": {
 		"@playwright/test": "^1.49.0",
 		"@wordpress/e2e-test-utils-playwright": "^1.15.0",
-		"@wordpress/scripts": "^28.6.0"
+		"@wordpress/scripts": "^31.1.0"
 	}
 }

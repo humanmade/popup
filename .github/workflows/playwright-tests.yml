@@ -4,13 +4,9 @@ on:
   push:
     branches:
       - main
-      - master
-      - develop
   pull_request:
     branches:
       - main
-      - master
-      - develop
 
 jobs:
   test:
@@ -42,11 +38,12 @@ jobs:
 
       - name: Start WordPress Playground
         run: |
-          npx @wp-now/wp-now start \
+          npx --yes @wp-playground/cli@latest server start \
             --blueprint=blueprint.json \
             --port=9400 \
             --php=${{ matrix.php }} \
-            --wp=${{ matrix.wp }} &
+            --wp=${{ matrix.wp }} \
+            --auto-mount &
           echo $! > playground.pid
 
       - name: Wait for Playground
