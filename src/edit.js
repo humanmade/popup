@@ -156,9 +156,9 @@ export default function Edit( { attributes, setAttributes } ) {
 					) }
 					{ attributes.trigger === 'click' && (
 						<ToggleControl
-							label={ __( 'Use CSS Anchoring', 'hm-popup' ) }
+							label={ __( 'Use Anchoring', 'hm-popup' ) }
 							help={ __(
-								'Position the popup relative to the button that triggered it using CSS anchor positioning.',
+								'Position the popup relative to the button that triggered it.',
 								'hm-popup'
 							) }
 							checked={ attributes.useCssAnchoring }
