@@ -13,6 +13,7 @@ import {
 	RangeControl,
 	SelectControl,
 	TextControl,
+	ToggleControl,
 } from '@wordpress/components';
 
 import './editor.scss';
@@ -20,6 +21,21 @@ import './editor.scss';
 const TRIGGERS = [
 	{ value: 'click', label: __( 'On click', 'hm-popup' ) },
 	{ value: 'exit', label: __( 'On exit intent', 'hm-popup' ) },
+];
+
+const ANCHOR_POSITIONS = [
+	{ value: 'bottom', label: __( 'Bottom', 'hm-popup' ) },
+	{ value: 'bottom-start', label: __( 'Bottom Start', 'hm-popup' ) },
+	{ value: 'bottom-end', label: __( 'Bottom End', 'hm-popup' ) },
+	{ value: 'top', label: __( 'Top', 'hm-popup' ) },
+	{ value: 'top-start', label: __( 'Top Start', 'hm-popup' ) },
+	{ value: 'top-end', label: __( 'Top End', 'hm-popup' ) },
+	{ value: 'left', label: __( 'Left', 'hm-popup' ) },
+	{ value: 'left-start', label: __( 'Left Start', 'hm-popup' ) },
+	{ value: 'left-end', label: __( 'Left End', 'hm-popup' ) },
+	{ value: 'right', label: __( 'Right', 'hm-popup' ) },
+	{ value: 'right-start', label: __( 'Right Start', 'hm-popup' ) },
+	{ value: 'right-end', label: __( 'Right End', 'hm-popup' ) },
 ];
 
 /**
@@ -135,6 +151,33 @@ export default function Edit( { attributes, setAttributes } ) {
 							value={ attributes.anchor || '' }
 							onChange={ ( anchor ) =>
 								setAttributes( { anchor } )
+							}
+						/>
+					) }
+					{ attributes.trigger === 'click' && (
+						<ToggleControl
+							label={ __( 'Use CSS Anchoring', 'hm-popup' ) }
+							help={ __(
+								'Position the popup relative to the button that triggered it using CSS anchor positioning.',
+								'hm-popup'
+							) }
+							checked={ attributes.useCssAnchoring }
+							onChange={ ( useCssAnchoring ) =>
+								setAttributes( { useCssAnchoring } )
+							}
+						/>
+					) }
+					{ attributes.trigger === 'click' && attributes.useCssAnchoring && (
+						<SelectControl
+							label={ __( 'Anchor Position', 'hm-popup' ) }
+							help={ __(
+								'Choose where the popup appears relative to the trigger button.',
+								'hm-popup'
+							) }
+							options={ ANCHOR_POSITIONS }
+							value={ attributes.anchorPosition || 'bottom' }
+							onChange={ ( anchorPosition ) =>
+								setAttributes( { anchorPosition } )
 							}
 						/>
 					) }

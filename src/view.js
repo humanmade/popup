@@ -12,6 +12,29 @@ const mouseEvent = ( e ) => {
 	}
 };
 
+/**
+ * Apply CSS anchor positioning styles to popup and trigger.
+ *
+ * @param {HTMLElement} popup   The popup dialog element.
+ * @param {HTMLElement} trigger The trigger element that opens the popup.
+ */
+const applyCssAnchorPositioning = ( popup, trigger ) => {
+	const position = popup.dataset.anchorPosition || 'bottom';
+	const anchorName = `--popup-anchor-${ popup.id || 'default' }`;
+
+	// Set the anchor-name on the trigger element.
+	trigger.style.anchorName = anchorName;
+
+	// Add anchored class to popup.
+	popup.classList.add( 'is-anchored' );
+
+	// Set the position-anchor on the popup.
+	popup.style.positionAnchor = anchorName;
+
+	// Store position as a CSS custom property for use in stylesheet.
+	popup.dataset.anchorPositionActive = position;
+};
+
 const bootstrap = () => {
 	let exitIntentSetup = false;
 	document.querySelectorAll( '.wp-block-hm-popup' ).forEach( ( popup ) => {
@@ -33,6 +56,8 @@ const bootstrap = () => {
 
 		// Handle click trigger.
 		if ( popup?.dataset.trigger === 'click' ) {
+			const useCssAnchoring = popup.dataset.useCssAnchoring === 'true';
+
 			document
 				.querySelectorAll( `[href$="#${ popup.id || 'open-popup' }"]` )
 				.forEach( ( trigger ) => {
@@ -41,6 +66,12 @@ const bootstrap = () => {
 						document
 							.querySelector( 'html' )
 							.classList.add( 'has-modal-open' );
+
+						// Apply CSS anchor positioning if enabled.
+						if ( useCssAnchoring ) {
+							applyCssAnchorPositioning( popup, trigger );
+						}
+
 						popup.showModal();
 					} );
 				} );
