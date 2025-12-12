@@ -120,6 +120,7 @@
 
 /* CSS Anchor Positioning styles */
 .wp-block-hm-popup.is-style-anchored {
+
 	/* Reset fullscreen modal styles for anchored popups */
 	width: fit-content;
 	height: fit-content;
@@ -228,6 +229,7 @@
 
 /* Anchored popup animation starting styles */
 @starting-style {
+
 	.wp-block-hm-popup[open].is-style-anchored {
 		opacity: 0;
 	}

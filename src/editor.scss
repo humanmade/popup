@@ -9,8 +9,25 @@
 	margin: 0;
 	padding: 40px !important;
 	background-color: rgba(0, 0, 0, 0.3) !important;
-	background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3) 10px, rgba(0, 0, 0, 0.3) 10px, rgba(0, 0, 0, 0.3) 20px) !important;
+	background-image:
+ repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3) 10px, rgba(0, 0, 0, 0.3) 10px, rgba(0, 0, 0, 0.3) 20px) !important;
 	z-index: 1 !important;
+
+	/* Override anchored style positioning in editor */
+	&.is-style-anchored {
+		position: relative !important;
+		top: 0 !important;
+		left: auto !important;
+		right: auto !important;
+		bottom: auto !important;
+		translate: none !important;
+		width: auto !important;
+		height: auto !important;
+		max-width: none;
+		max-height: max-content;
+		margin: 0 !important;
+		overflow: visible;
+	}
 }
 
 /* Anchor position grid control */
