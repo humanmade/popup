@@ -23,9 +23,14 @@
 	margin-block-start: 0 !important;
 	margin-block-end: 0 !important;
 
+	&:focus {
+		outline: none;
+	}
+
 	&.is-style-side--left,
 	&.is-style-side--right {
 		padding: 0;
+		max-width: none;
 	}
 
 	&[open] {
@@ -94,7 +99,7 @@
 /* Transition the :backdrop when the dialog modal is promoted to
   the top layer */
 .wp-block-hm-popup::backdrop {
-	background-color: rgba(0, 0, 0, 0%);
+	background-color: var(--hm-popup--backdrop-color, rgba(0, 0, 0, 0%));
 	transition:
 		display 150ms allow-discrete,
 		overlay 150ms allow-discrete,
@@ -102,7 +107,7 @@
 }
 
 .wp-block-hm-popup[open]::backdrop {
-	background-color: rgba(0, 0, 0, 75%);
+	background-color: var(--hm-popup--backdrop-color, rgba(0, 0, 0, 75%));
 }
 
 /* This starting-style rule cannot be nested inside the above selector
@@ -110,6 +115,123 @@
 @starting-style {
 
 	.wp-block-hm-popup[open]::backdrop {
-		background-color: rgba(0, 0, 0, 0%);
+		background-color: var(--hm-popup--backdrop-color, rgba(0, 0, 0, 0%));
+	}
+}
+
+/* CSS Anchor Positioning styles */
+.wp-block-hm-popup.is-style-anchored {
+
+	/* Reset fullscreen modal styles for anchored popups */
+	width: fit-content;
+	height: fit-content;
+	max-width: none;
+	max-height: none;
+	padding: 0;
+	margin: 0 !important;
+	overflow: visible;
+	align-items: stretch;
+
+	/* Enable anchor positioning */
+	position: fixed;
+	position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
+
+	/* Default position (bottom) */
+	top: anchor(bottom);
+	left: anchor(center);
+	translate: -50% 0;
+
+	/* Bottom positions */
+	&[data-anchor-position-active="bottom"] {
+		top: anchor(bottom);
+		left: anchor(center);
+		translate: -50% 0;
+	}
+
+	&[data-anchor-position-active="bottom-start"] {
+		top: anchor(bottom);
+		left: anchor(left);
+		translate: 0 0;
+	}
+
+	&[data-anchor-position-active="bottom-end"] {
+		top: anchor(bottom);
+		right: anchor(right);
+		left: auto;
+		translate: 0 0;
+	}
+
+	/* Top positions */
+	&[data-anchor-position-active="top"] {
+		bottom: anchor(top);
+		top: auto;
+		left: anchor(center);
+		translate: -50% 0;
+	}
+
+	&[data-anchor-position-active="top-start"] {
+		bottom: anchor(top);
+		top: auto;
+		left: anchor(left);
+		translate: 0 0;
+	}
+
+	&[data-anchor-position-active="top-end"] {
+		bottom: anchor(top);
+		top: auto;
+		right: anchor(right);
+		left: auto;
+		translate: 0 0;
+	}
+
+	/* Left positions */
+	&[data-anchor-position-active="left"] {
+		right: anchor(left);
+		left: auto;
+		top: anchor(center);
+		translate: 0 -50%;
+	}
+
+	&[data-anchor-position-active="left-start"] {
+		right: anchor(left);
+		left: auto;
+		top: anchor(top);
+		translate: 0 0;
+	}
+
+	&[data-anchor-position-active="left-end"] {
+		right: anchor(left);
+		left: auto;
+		bottom: anchor(bottom);
+		top: auto;
+		translate: 0 0;
+	}
+
+	/* Right positions */
+	&[data-anchor-position-active="right"] {
+		left: anchor(right);
+		top: anchor(center);
+		translate: 0 -50%;
+	}
+
+	&[data-anchor-position-active="right-start"] {
+		left: anchor(right);
+		top: anchor(top);
+		translate: 0 0;
+	}
+
+	&[data-anchor-position-active="right-end"] {
+		left: anchor(right);
+		bottom: anchor(bottom);
+		top: auto;
+		translate: 0 0;
+	}
+}
+
+/* Anchored popup animation starting styles */
+@starting-style {
+
+	.wp-block-hm-popup[open].is-style-anchored {
+		opacity: 0;
 	}
 }
