@@ -149,7 +149,6 @@ const AnchorPositionControl = ( { value, onChange } ) => {
 
 	return (
 		<BaseControl
-			id="hm-popup-anchor-position"
 			label={ __( 'Anchor Position', 'hm-popup' ) }
 			help={ __(
 				'Choose where the popup appears relative to the trigger button.',
@@ -222,51 +221,50 @@ const AnchorPositionControl = ( { value, onChange } ) => {
  */
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	// Manually handle background classes and styles because we're skipping automatic serialisation.
-	const { backgroundColor, style } = attributes;
-	const classNames = [];
-	const styles = {};
+	const { opacity, backgroundColor, style, layout } = attributes;
+	const opacityVal = Number( ( opacity || 0 ) / 100 ).toFixed( 2 );
+	const backgrounds = [];
+	const styles = {
+		backgroundSize: style?.background?.backgroundSize || 'cover',
+		backgroundRepeat: 'no-repeat',
+		backgroundPosition: 'center',
+		backgroundImage: '',
+	};
+
 	if ( backgroundColor ) {
-		classNames.push(
-			`has-background-color has-${ backgroundColor }-background-color`
+		styles.backgroundColor = `color(from var(--wp--preset--color--${ backgroundColor }) srgb r g b / ${ opacityVal }) !important`;
+	}
+
+	if ( style?.color?.gradient ) {
+		backgrounds.push( style.color.gradient );
+	} else {
+		// Default placeholder
+		backgrounds.push(
+			`repeating-linear-gradient( 45deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2) 10px, rgba(0, 0, 0, 0.2) 10px, rgba(0, 0, 0, 0.2) 20px)`
 		);
 	}
-	if ( style?.background ) {
-		style.backgroundImage = `url(${ style.background?.url })`;
-		style.backgroundSize = style.background?.backgroundSize || 'cover';
-	}
+
+	styles.backgroundImage = `${ backgrounds.join( ', ' ) } !important`;
 
 	const isAnchored = attributes.className?.includes( 'is-style-anchored' );
 
-	// Get inner blocks to check/update contentSize
-	const innerBlocks = useSelect(
-		( select ) => select( blockEditorStore ).getBlocks( clientId ),
-		[ clientId ]
-	);
-	const { updateBlockAttributes } = useDispatch( blockEditorStore );
-
-	// When anchored style is applied, set default contentSize on inner group block
+	// When anchored style is applied, set default contentSize
 	useEffect( () => {
-		if ( isAnchored && innerBlocks.length > 0 ) {
-			const groupBlock = innerBlocks[ 0 ];
-			if (
-				groupBlock.name === 'core/group' &&
-				! groupBlock.attributes.layout?.contentSize
-			) {
-				updateBlockAttributes( groupBlock.clientId, {
-					layout: {
-						...groupBlock.attributes.layout,
-						type: 'constrained',
-						contentSize: '300px',
-					},
-				} );
-			}
+		if ( isAnchored && ! layout?.contentSize ) {
+			setAttributes( {
+				layout: {
+					...( layout || {} ),
+					type: 'constrained',
+					contentSize: '300px',
+				},
+			} );
 		}
-	}, [ isAnchored, innerBlocks, updateBlockAttributes ] );
+	}, [ isAnchored, layout, setAttributes ] );
 
 	const { ...blockProps } = useBlockProps( {
-		className: classNames.join( ' ' ),
 		style: styles,
 	} );
+
 	const { children, ...innerBlocksProps } = useInnerBlocksProps( blockProps, {
 		template: [
 			[
@@ -299,6 +297,23 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 	return (
 		<div { ...innerBlocksProps }>
+			<style>
+				{ `#block-${ clientId } {
+					background-color: ${ styles.backgroundColor };
+					&::before {
+						content: '';
+						position: absolute;
+						left: 0; right: 0;
+						top: 0; bottom: 0;
+						z-index: 1;
+						background-image: ${ styles.backgroundImage };
+						background-repeat: ${ styles.backgroundRepeat };
+						background-size: ${ styles.backgroundSize };
+						background-position: ${ styles.backgroundPosition };
+						opacity: ${ opacityVal };
+					}
+				` }
+			</style>
 			<InspectorControls group="default">
 				<PanelBody>
 					{ attributes.trigger === 'exit' && (
@@ -376,6 +391,16 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				</PanelBody>
 			</InspectorControls>
 			<InspectorControls group="styles">
+				{ isAnchored && (
+					<PanelBody>
+						<AnchorPositionControl
+							value={ attributes.anchorPosition || 'bottom' }
+							onChange={ ( anchorPosition ) =>
+								setAttributes( { anchorPosition } )
+							}
+						/>
+					</PanelBody>
+				) }
 				<PanelBody>
 					<RangeControl
 						label={ __( 'Backdrop opacity', 'hm-popup' ) }
@@ -385,14 +410,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						max={ 100 }
 						step={ 1 }
 					/>
-					{ isAnchored && (
-						<AnchorPositionControl
-							value={ attributes.anchorPosition || 'bottom' }
-							onChange={ ( anchorPosition ) =>
-								setAttributes( { anchorPosition } )
-							}
-						/>
-					) }
 				</PanelBody>
 			</InspectorControls>
 			{ children }

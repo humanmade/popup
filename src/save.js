@@ -17,8 +17,6 @@ export default function save( { attributes } ) {
 			{ ...innerBlocksProps }
 			data-trigger={ attributes.trigger || 'click' }
 			data-expiry={ attributes.cookieExpiration }
-			data-backdrop-opacity={ ( attributes.opacity || 1 ) / 100 }
-			data-backdrop-color={ attributes.backgroundColor }
 			data-anchor-position={
 				isAnchored ? attributes.anchorPosition || 'bottom' : undefined
 			}
