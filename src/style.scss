@@ -30,6 +30,7 @@
 	&.is-style-side--left,
 	&.is-style-side--right {
 		padding: 0;
+		max-width: none;
 	}
 
 	&[open] {

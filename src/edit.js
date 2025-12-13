@@ -246,20 +246,22 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 	styles.backgroundImage = `${ backgrounds.join( ', ' ) } !important`;
 
-	const isAnchored = attributes.className?.includes( 'is-style-anchored' );
+	const needsWidth = attributes.className?.includes( 'is-style-anchored' )
+		|| attributes.className?.includes( 'is-style-side--left' )
+		|| attributes.className?.includes( 'is-style-side--right' );
 
 	// When anchored style is applied, set default contentSize
 	useEffect( () => {
-		if ( isAnchored && ! layout?.contentSize ) {
+		if ( needsWidth && ! layout?.contentSize ) {
 			setAttributes( {
 				layout: {
 					...( layout || {} ),
 					type: 'constrained',
-					contentSize: '300px',
+					contentSize: '360px',
 				},
 			} );
 		}
-	}, [ isAnchored, layout, setAttributes ] );
+	}, [ needsWidth, layout, setAttributes ] );
 
 	const { ...blockProps } = useBlockProps( {
 		style: styles,
@@ -391,16 +393,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				</PanelBody>
 			</InspectorControls>
 			<InspectorControls group="styles">
-				{ isAnchored && (
-					<PanelBody>
-						<AnchorPositionControl
-							value={ attributes.anchorPosition || 'bottom' }
-							onChange={ ( anchorPosition ) =>
-								setAttributes( { anchorPosition } )
-							}
-						/>
-					</PanelBody>
-				) }
 				<PanelBody>
 					<RangeControl
 						label={ __( 'Backdrop opacity', 'hm-popup' ) }
@@ -411,6 +403,16 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						step={ 1 }
 					/>
 				</PanelBody>
+				{ isAnchored && (
+					<PanelBody>
+						<AnchorPositionControl
+							value={ attributes.anchorPosition || 'bottom' }
+							onChange={ ( anchorPosition ) =>
+								setAttributes( { anchorPosition } )
+							}
+						/>
+					</PanelBody>
+				) }
 			</InspectorControls>
 			{ children }
 		</div>
