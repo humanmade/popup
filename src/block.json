@@ -3,6 +3,7 @@
 	"apiVersion": 3,
 	"name": "hm/popup",
 	"title": "Popup Block",
+	"version": "0.5.2",
 	"category": "widgets",
 	"icon": "exit",
 	"description": "Popup wrapper block",
