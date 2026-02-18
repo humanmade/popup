@@ -22,6 +22,23 @@ import save from './save';
 import metadata from './block.json';
 
 /**
+ * Deprecated save function with data-dismissible attribute.
+ */
+const deprecatedSave = ( { attributes } ) => {
+	return (
+		<dialog
+			className="wp-block-hm-popup"
+			data-trigger={ attributes.trigger || 'click' }
+			data-expiry={ attributes.cookieExpiration }
+			data-backdrop-opacity={ ( attributes.opacity || 1 ) / 100 }
+			data-backdrop-color={ attributes.backgroundColor }
+			data-dismissible={ attributes.dismissible !== false ? 'true' : 'false' }
+			data-dismiss-on-submit={ attributes.dismissOnSubmit ? 'true' : 'false' }
+		/>
+	);
+};
+
+/**
  * Every block starts by registering a new block type definition.
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
@@ -36,4 +53,14 @@ registerBlockType( metadata.name, {
 	 * @see ./save.js
 	 */
 	save,
+
+	/**
+	 * Deprecated versions
+	 */
+	deprecated: [
+		{
+			attributes: metadata.attributes,
+			save: deprecatedSave,
+		},
+	],
 } );
