@@ -19,12 +19,6 @@ const save = ( { attributes } ) => {
 			data-expiry={ attributes.cookieExpiration }
 			data-backdrop-opacity={ ( attributes.opacity || 1 ) / 100 }
 			data-backdrop-color={ attributes.backgroundColor }
-			data-dismissible={
-				attributes.dismissible !== false ? 'true' : 'false'
-			}
-			data-dismiss-on-submit={
-				attributes.dismissOnSubmit ? 'true' : 'false'
-			}
 		>
 			{ children }
 		</dialog>
@@ -45,14 +39,6 @@ export default {
 		cookieExpiration: {
 			type: 'number',
 			default: 7,
-		},
-		dismissible: {
-			type: 'boolean',
-			default: true,
-		},
-		dismissOnSubmit: {
-			type: 'boolean',
-			default: false,
 		},
 	},
 	save,

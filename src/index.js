@@ -21,6 +21,7 @@ import Edit from './edit';
 import save from './save';
 import metadata from './block.json';
 import deprecated from './deprecations';
+import './variations';
 
 /**
  * Every block starts by registering a new block type definition.

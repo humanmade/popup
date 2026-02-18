@@ -16,8 +16,6 @@
 namespace HM\Popup;
 
 use WP_HTML_Tag_Processor;
-use WP_Style_Engine;
-use WP_Style_Engine_CSS_Rule;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -80,14 +78,38 @@ function filter_render_block( $block_content, $block, \WP_Block $instance ) {
 
 	$classname = 'wp-elements-' . md5( maybe_serialize( $block['attrs'] ) );
 
-	$style = WP_Style_Engine::compile_stylesheet_from_css_rules(
-		new WP_Style_Engine_CSS_Rule( ".{$classname}::backdrop", [
-			'opacity' => ( $block['attrs']['opacity'] ?? '75' ) . '%',
-			'background-color' => "var(--wp--preset--color--{$block['attrs']['backgroundColor']}) !important",
-			'background-image' => "url({$block['attrs']['style']['background']['url']})",
-			'background-size' => $block['attrs']['style']['background']['backgroundSize'] ?? 'cover',
-		] )
-	);
+	$styles = [
+		'background-position' => 'center',
+		'background-size' => 'cover',
+		'background-repeat' => 'no-repeat',
+	];
+
+	if ( ! empty( $block['attrs']['backgroundColor'] ) ) {
+		$styles['background-color'] = "var(--wp--preset--color--{$block['attrs']['backgroundColor']}) !important";
+	}
+
+	if ( ! empty( $block['attrs']['style']['color']['gradient'] ) ) {
+		$styles['background-color'] = 'transparent !important';
+		$styles['background-image'] = "{$block['attrs']['style']['color']['gradient']} !important";
+	}
+
+	$styles = array_map( function ( $style, $prop ) {
+		return "{$prop}: {$style}";
+	}, $styles, array_keys( $styles ) );
+
+	$open_styles = [
+		'opacity' => ( $block['attrs']['opacity'] ?? '0' ) . '%',
+	];
+
+	$open_styles = array_map( function ( $style, $prop ) {
+		return "{$prop}: {$style}";
+	}, $open_styles, array_keys( $open_styles ) );
+
+	$style = implode( ';', $styles );
+	$style = ".{$classname}::backdrop{{$style}}";
+
+	$open_style = implode( ';', $open_styles );
+	$style .= ".{$classname}[open]::backdrop{{$open_style}}";
 
 	wp_enqueue_block_support_styles( $style );
 
@@ -120,6 +142,14 @@ function action_init() : void {
 		[
 			'name' => 'side--right',
 			'label' => __( 'Right Side', 'hm-popup' ),
+		]
+	);
+
+	register_block_style(
+		'hm/popup',
+		[
+			'name' => 'anchored',
+			'label' => __( 'Anchored', 'hm-popup' ),
 		]
 	);
 }

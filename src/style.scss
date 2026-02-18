@@ -1,44 +1,32 @@
 .wp-block-hm-popup {
-	top: 100%;
-	opacity: 0;
-	transition:
-		opacity 150ms linear,
-		top 0s linear 150ms,
-		left 0s linear 150ms,
-		right 0s linear 150ms,
-		overlay 150ms linear allow-discrete,
-		display 150ms linear allow-discrete;
 	align-items: center;
-	overflow: auto;
+	align-content: center;
+	overflow: hidden;
 	z-index: 200;
 	box-sizing: border-box;
-	max-width: 100vw;
+	max-width: 100vw !important;
 	max-height: 100vh;
 	width: 100vw;
 	height: 100vh;
 	border: 0;
 	background: none;
 	padding: 5vh 5vw;
-	margin: 0 auto;
+	margin: 0;
 	margin-block-start: 0 !important;
 	margin-block-end: 0 !important;
+	transition:
+		overflow var(--hm-popup--animation-speed, 300ms) ease-in-out allow-discrete,
+		overlay var(--hm-popup--animation-speed, 300ms) ease-in-out allow-discrete,
+		display var(--hm-popup--animation-speed, 300ms) ease-in-out allow-discrete;
+
+	&:focus {
+		outline: none;
+	}
 
 	&.is-style-side--left,
 	&.is-style-side--right {
 		padding: 0;
-	}
-
-	&[open] {
-		top: 0;
-		opacity: 1;
-	}
-
-	&[open].is-style-side--left {
-		right: 0;
-	}
-
-	&[open].is-style-side--right {
-		left: 0;
+		max-width: none;
 	}
 
 	> * {
@@ -50,20 +38,49 @@
 		margin-block-start: 0 !important;
 		margin-top: 0 !important;
 		margin-bottom: 0 !important;
+		perspective-origin: center;
+		transform-style: preserve-3d;
+		transform-origin: center;
+		opacity: 0;
+		transition:
+			opacity var(--hm-popup--animation-speed, 300ms) ease-in-out,
+			left var(--hm-popup--animation-speed, 300ms) ease-in-out,
+			right var(--hm-popup--animation-speed, 300ms) ease-in-out,
+			transform var(--hm-popup--animation-speed, 300ms) ease-in-out;
+	}
+
+	&[open] {
+		overflow: auto;
+	}
+
+	&[open] > * {
+		opacity: 1;
+		position: relative;
 	}
 
 	&.is-style-side--left > *,
 	&.is-style-side--right > * {
 		height: 100%;
 		overflow: auto;
+		transform: none;
 	}
 
 	&.is-style-side--left > * {
 		margin-left: 0 !important;
+		right: 100%;
 	}
 
 	&.is-style-side--right > * {
 		margin-right: 0 !important;
+		left: 100%;
+	}
+
+	&[open].is-style-side--left > * {
+		right: 0;
+	}
+
+	&[open].is-style-side--right > * {
+		left: 0;
 	}
 }
 
@@ -74,35 +91,42 @@
 @starting-style {
 
 	.wp-block-hm-popup[open] {
-		opacity: 0;
-		top: 100%;
+		overflow: hidden;
 	}
 
-	.wp-block-hm-popup[open].is-style-side--left {
+	.wp-block-hm-popup[open] > * {
+		opacity: 0;
 		top: 0;
-		bottom: 0;
+	}
+
+	.wp-block-hm-popup[open].is-style-side--left > * {
 		right: 100%;
 	}
 
-	.wp-block-hm-popup[open].is-style-side--right {
+	.wp-block-hm-popup[open].is-style-side--right > * {
+		left: 100%;
+	}
+
+	.wp-block-hm-popup[open].is-style-side--left > *,
+	.wp-block-hm-popup[open].is-style-side--right > * {
 		top: 0;
 		bottom: 0;
-		left: 100%;
 	}
 }
 
 /* Transition the :backdrop when the dialog modal is promoted to
   the top layer */
 .wp-block-hm-popup::backdrop {
-	background-color: rgba(0, 0, 0, 0%);
+	background-color: transparent;
+	opacity: 0;
 	transition:
-		display 150ms allow-discrete,
-		overlay 150ms allow-discrete,
-		background-color 150ms;
+		display var(--hm-popup--animation-speed, 300ms) allow-discrete,
+		overlay var(--hm-popup--animation-speed, 300ms) allow-discrete,
+		opacity var(--hm-popup--animation-speed, 300ms) ease-in-out;
 }
 
 .wp-block-hm-popup[open]::backdrop {
-	background-color: rgba(0, 0, 0, 75%);
+	opacity: 75%;
 }
 
 /* This starting-style rule cannot be nested inside the above selector
@@ -110,6 +134,124 @@
 @starting-style {
 
 	.wp-block-hm-popup[open]::backdrop {
-		background-color: rgba(0, 0, 0, 0%);
+		background-color: transparent;
+		opacity: 0;
+	}
+}
+
+/* CSS Anchor Positioning styles */
+.wp-block-hm-popup.is-style-anchored {
+
+	/* Reset fullscreen modal styles for anchored popups */
+	width: fit-content;
+	height: fit-content;
+	max-width: none;
+	max-height: none;
+	padding: 0;
+	margin: 0 !important;
+	overflow: visible;
+	align-items: stretch;
+
+	/* Enable anchor positioning */
+	position: fixed;
+	position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
+
+	/* Default position (bottom) */
+	top: anchor(bottom);
+	left: anchor(center);
+	translate: -50% 0;
+
+	/* Bottom positions */
+	&[data-anchor-position-active="bottom"] {
+		top: anchor(bottom);
+		left: anchor(center);
+		translate: -50% 0;
+	}
+
+	&[data-anchor-position-active="bottom-start"] {
+		top: anchor(bottom);
+		left: anchor(left);
+		translate: 0 0;
+	}
+
+	&[data-anchor-position-active="bottom-end"] {
+		top: anchor(bottom);
+		right: anchor(right);
+		left: auto;
+		translate: 0 0;
+	}
+
+	/* Top positions */
+	&[data-anchor-position-active="top"] {
+		bottom: anchor(top);
+		top: auto;
+		left: anchor(center);
+		translate: -50% 0;
+	}
+
+	&[data-anchor-position-active="top-start"] {
+		bottom: anchor(top);
+		top: auto;
+		left: anchor(left);
+		translate: 0 0;
+	}
+
+	&[data-anchor-position-active="top-end"] {
+		bottom: anchor(top);
+		top: auto;
+		right: anchor(right);
+		left: auto;
+		translate: 0 0;
+	}
+
+	/* Left positions */
+	&[data-anchor-position-active="left"] {
+		right: anchor(left);
+		left: auto;
+		top: anchor(center);
+		translate: 0 -50%;
+	}
+
+	&[data-anchor-position-active="left-start"] {
+		right: anchor(left);
+		left: auto;
+		top: anchor(top);
+		translate: 0 0;
+	}
+
+	&[data-anchor-position-active="left-end"] {
+		right: anchor(left);
+		left: auto;
+		bottom: anchor(bottom);
+		top: auto;
+		translate: 0 0;
+	}
+
+	/* Right positions */
+	&[data-anchor-position-active="right"] {
+		left: anchor(right);
+		top: anchor(center);
+		translate: 0 -50%;
+	}
+
+	&[data-anchor-position-active="right-start"] {
+		left: anchor(right);
+		top: anchor(top);
+		translate: 0 0;
+	}
+
+	&[data-anchor-position-active="right-end"] {
+		left: anchor(right);
+		bottom: anchor(bottom);
+		top: auto;
+		translate: 0 0;
+	}
+}
+
+/* Anchored popup animation starting styles */
+@starting-style {
+
+	.wp-block-hm-popup[open].is-style-anchored {
+		opacity: 0;
 	}
 }
