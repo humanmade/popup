@@ -28,7 +28,6 @@ const isWithinExpiry = ( storageKey, expirationDays ) => {
 const bootstrap = () => {
 	let exitIntentSetup = false;
 	document.querySelectorAll( '.wp-block-hm-popup' ).forEach( ( popup ) => {
-		const dismissible = popup.dataset.dismissible !== 'false';
 		const dismissOnSubmit = popup.dataset.dismissOnSubmit === 'true';
 
 		// On close remove HTML class.
@@ -37,20 +36,6 @@ const bootstrap = () => {
 				.querySelector( 'html' )
 				.classList.remove( 'has-modal-open' );
 		} );
-
-		// On backdrop click, close modal (only if dismissible).
-		popup.addEventListener( 'mousedown', ( event ) => {
-			if ( dismissible && event.target === event.currentTarget ) {
-				event.currentTarget.close();
-			}
-		} );
-
-		// Prevent closing via Escape key when not dismissible.
-		if ( ! dismissible ) {
-			popup.addEventListener( 'cancel', ( event ) => {
-				event.preventDefault();
-			} );
-		}
 
 		// Dismiss on form submit.
 		if ( dismissOnSubmit ) {

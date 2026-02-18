@@ -165,7 +165,7 @@ test.describe( 'Popup Block Options', () => {
 			);
 		} );
 
-		test( 'outputs data-dismissible="false" when undismissible', async ( {
+		test( 'outputs closedby="none" when undismissible', async ( {
 			editor,
 			page,
 		} ) => {
@@ -179,8 +179,8 @@ test.describe( 'Popup Block Options', () => {
 
 			const dialog = page.locator( '.wp-block-hm-popup' );
 			await expect( dialog ).toHaveAttribute(
-				'data-dismissible',
-				'false'
+				'closedby',
+				'none'
 			);
 		} );
 
