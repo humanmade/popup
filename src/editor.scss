@@ -27,6 +27,10 @@
 		margin: 0 !important;
 		overflow: visible;
 	}
+
+	> * {
+		opacity: 1;
+	}
 }
 
 /* Anchor position grid control */
