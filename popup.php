@@ -16,8 +16,6 @@
 namespace HM\Popup;
 
 use WP_HTML_Tag_Processor;
-use WP_Style_Engine;
-use WP_Style_Engine_CSS_Rule;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
