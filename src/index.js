@@ -20,7 +20,7 @@ import './style.scss';
 import Edit from './edit';
 import save from './save';
 import metadata from './block.json';
-import v1Deprecation from './deprecations/v1';
+import deprecated from './deprecations';
 
 /**
  * Every block starts by registering a new block type definition.
@@ -41,10 +41,5 @@ registerBlockType( metadata.name, {
 	/**
 	 * Deprecated versions
 	 */
-	deprecated: [
-		{
-			attributes: metadata.attributes,
-			save: v1Deprecation.save,
-		},
-	],
+	deprecated,
 } );
