@@ -32,10 +32,24 @@ const applyCssAnchorPositioning = ( popup, trigger ) => {
 	popup.dataset.anchorPositionActive = position;
 };
 
+const openPopup = ( popup ) => {
+	document.querySelector( 'html' ).classList.add( 'has-modal-open' );
+	popup.showModal();
+};
+
+const isWithinExpiry = ( storageKey, expirationDays ) => {
+	const lastShown = parseInt(
+		window.localStorage.getItem( storageKey ) || 0,
+		10
+	);
+	return lastShown >= Date.now() - expirationDays * 24 * 60 * 60 * 1000;
+};
+
 const bootstrap = () => {
 	let exitIntentSetup = false;
 	document.querySelectorAll( '.wp-block-hm-popup' ).forEach( ( popup ) => {
-		// Block selectors API doesn't work so we need to
+		const dismissOnSubmit = popup.dataset.dismissOnSubmit === 'true';
+		const expirationDays = parseInt( popup?.dataset.expiry ?? 7, 10 );
 
 		// On close remove HTML class.
 		popup.addEventListener( 'close', () => {
@@ -44,12 +58,14 @@ const bootstrap = () => {
 				.classList.remove( 'has-modal-open' );
 		} );
 
-		// On backdrop click, close modal.
-		popup.addEventListener( 'mousedown', ( event ) => {
-			if ( event.target === event.currentTarget ) {
-				event.currentTarget.close();
-			}
-		} );
+		// Dismiss on form submit.
+		if ( dismissOnSubmit ) {
+			popup.querySelectorAll( 'form' ).forEach( ( form ) => {
+				form.addEventListener( 'submit', () => {
+					popup.close();
+				} );
+			} );
+		}
 
 		// Handle click trigger.
 		if ( popup?.dataset.trigger === 'click' ) {
@@ -60,37 +76,37 @@ const bootstrap = () => {
 				.forEach( ( trigger ) => {
 					trigger.addEventListener( 'click', ( event ) => {
 						event.preventDefault();
-						document
-							.querySelector( 'html' )
-							.classList.add( 'has-modal-open' );
 
 						// Apply CSS anchor positioning if anchored style is active.
 						if ( isAnchored ) {
 							applyCssAnchorPositioning( popup, trigger );
 						}
 
-						popup.showModal();
+						openPopup( popup );
 					} );
 				} );
 		}
 
 		// Handle exit intent trigger.
 		if ( popup?.dataset.trigger === 'exit' ) {
-			// Get expiry setting on local storage value.
-			const expirationDays = parseInt( popup?.dataset.expiry || 7, 10 );
-
 			if (
-				parseInt(
-					window.localStorage.getItem( 'exitIntentShown' ) || 0,
-					10
-				) <
-					Date.now() - expirationDays * 24 * 60 * 60 * 1000 &&
+				! isWithinExpiry( 'exitIntentShown', expirationDays ) &&
 				! exitIntentSetup
 			) {
 				exitIntentSetup = true;
 				setTimeout( () => {
 					document.addEventListener( 'mouseout', mouseEvent );
 				}, 2000 );
+			}
+		}
+
+		// Handle page load trigger.
+		if ( popup?.dataset.trigger === 'load' ) {
+			const storageKey = `loadPopupShown_${ popup.id || 'popup' }`;
+
+			if ( ! isWithinExpiry( storageKey, expirationDays ) ) {
+				openPopup( popup );
+				window.localStorage.setItem( storageKey, Date.now() );
 			}
 		}
 	} );

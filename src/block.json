@@ -39,7 +39,7 @@
 		"trigger": {
 			"type": "string",
 			"default": "click",
-			"enum": [ "click", "exit" ]
+			"enum": [ "click", "exit", "load" ]
 		},
 		"cookieExpiration": {
 			"type": "number",
@@ -73,6 +73,14 @@
 					"left": "var:preset|spacing|30"
 				}
 			}
+		},
+		"dismissible": {
+			"type": "boolean",
+			"default": true
+		},
+		"dismissOnSubmit": {
+			"type": "boolean",
+			"default": false
 		}
 	},
 	"selectors": {
