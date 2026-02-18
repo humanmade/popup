@@ -17,7 +17,9 @@ export default function save( { attributes } ) {
 			data-expiry={ attributes.cookieExpiration }
 			data-backdrop-opacity={ ( attributes.opacity || 1 ) / 100 }
 			data-backdrop-color={ attributes.backgroundColor }
-			data-dismiss-on-submit={ attributes.dismissOnSubmit ? 'true' : 'false' }
+			data-dismiss-on-submit={
+				attributes.dismissOnSubmit ? 'true' : 'false'
+			}
 			closedby={ attributes.dismissible === false ? 'none' : 'any' }
 		>
 			{ children }

@@ -6,7 +6,9 @@ const { test, expect } = require( '@wordpress/e2e-test-utils-playwright' );
 test.describe( 'Popup Block Options', () => {
 	test.beforeEach( async ( { admin, editor } ) => {
 		await admin.createNewPost();
-		await editor.setPreferences( 'core/edit-post', { welcomeGuide: false } );
+		await editor.setPreferences( 'core/edit-post', {
+			welcomeGuide: false,
+		} );
 		await editor.insertBlock( { name: 'hm/popup' } );
 	} );
 
@@ -51,9 +53,7 @@ test.describe( 'Popup Block Options', () => {
 				.getByRole( 'combobox', { name: 'Popup Trigger' } )
 				.selectOption( 'load' );
 
-			await expect(
-				page.getByText( 'Cookie expiration' )
-			).toBeVisible();
+			await expect( page.getByText( 'Cookie expiration' ) ).toBeVisible();
 		} );
 
 		test( 'shows cookie expiration control for "exit" trigger', async ( {
@@ -65,9 +65,7 @@ test.describe( 'Popup Block Options', () => {
 				.getByRole( 'combobox', { name: 'Popup Trigger' } )
 				.selectOption( 'exit' );
 
-			await expect(
-				page.getByText( 'Cookie expiration' )
-			).toBeVisible();
+			await expect( page.getByText( 'Cookie expiration' ) ).toBeVisible();
 		} );
 
 		test( 'hides cookie expiration control for "click" trigger', async ( {
@@ -160,10 +158,7 @@ test.describe( 'Popup Block Options', () => {
 			await page.goto( `/?p=${ postId }` );
 
 			const dialog = page.locator( '.wp-block-hm-popup' );
-			await expect( dialog ).toHaveAttribute(
-				'data-trigger',
-				'load'
-			);
+			await expect( dialog ).toHaveAttribute( 'data-trigger', 'load' );
 		} );
 
 		test( 'outputs closedby="any" for dismissible dialogs', async ( {
@@ -174,10 +169,7 @@ test.describe( 'Popup Block Options', () => {
 			await page.goto( `/?p=${ postId }` );
 
 			const dialog = page.locator( '.wp-block-hm-popup' );
-			await expect( dialog ).toHaveAttribute(
-				'closedby',
-				'any'
-			);
+			await expect( dialog ).toHaveAttribute( 'closedby', 'any' );
 		} );
 
 		test( 'outputs closedby="none" when undismissible', async ( {
@@ -193,10 +185,7 @@ test.describe( 'Popup Block Options', () => {
 			await page.goto( `/?p=${ postId }` );
 
 			const dialog = page.locator( '.wp-block-hm-popup' );
-			await expect( dialog ).toHaveAttribute(
-				'closedby',
-				'none'
-			);
+			await expect( dialog ).toHaveAttribute( 'closedby', 'none' );
 		} );
 
 		test( 'outputs data-dismiss-on-submit="true" when enabled', async ( {
