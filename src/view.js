@@ -52,7 +52,7 @@ const bootstrap = () => {
 		const expirationDays = parseInt( popup?.dataset.expiry ?? 7, 10 );
 
 		// On clicking the dialog but not its content, close.
-		if ( popup.closedBy == 'any' ) {
+		if ( popup.closedBy === 'any' ) {
 			popup.addEventListener( 'click', ( event ) => {
 				if ( event.currentTarget === popup ) {
 					popup.close();

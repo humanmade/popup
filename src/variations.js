@@ -12,7 +12,7 @@ domReady( () => {
 		name: 'hm-popup-close',
 		title: __( 'Close Popup', 'hm-popup' ),
 		icon: 'exit',
-		scope: [ 'block', 'inserter', 'transform', ],
+		scope: [ 'block', 'inserter', 'transform' ],
 		attributes: {
 			url: '#close',
 			metadata: { popup: 'close' },
@@ -25,7 +25,7 @@ domReady( () => {
 		name: 'hm-popup-open',
 		title: __( 'Open Popup', 'hm-popup' ),
 		icon: 'exit',
-		scope: [ 'block', 'inserter', 'transform', ],
+		scope: [ 'block', 'inserter', 'transform' ],
 		attributes: {
 			metadata: { popup: 'open' },
 		},
@@ -40,10 +40,7 @@ const withPopupControls = createHigherOrderComponent( ( BlockEdit ) => {
 
 		const popupOptions = useSelect(
 			( select ) => {
-				if (
-					name !== 'core/button' ||
-					! attributes.metadata?.popup
-				) {
+				if ( name !== 'core/button' || ! attributes.metadata?.popup ) {
 					return null;
 				}
 
@@ -56,7 +53,11 @@ const withPopupControls = createHigherOrderComponent( ( BlockEdit ) => {
 					...blockEditorSelect
 						.getBlocksByName( 'hm/popup' )
 						.map( ( id ) => blockEditorSelect.getBlock( id ) )
-						.filter( ( block ) => block?.attributes.anchor && block?.attributes.trigger === 'click' )
+						.filter(
+							( block ) =>
+								block?.attributes.anchor &&
+								block?.attributes.trigger === 'click'
+						)
 						.map( ( block ) => ( {
 							label: block.attributes.anchor,
 							value: `#${ block.attributes.anchor }`,
@@ -76,9 +77,7 @@ const withPopupControls = createHigherOrderComponent( ( BlockEdit ) => {
 								label={ __( 'Open Popup', 'hm-popup' ) }
 								value={ attributes.url || '' }
 								options={ popupOptions }
-								onChange={ ( url ) =>
-									setAttributes( { url } )
-								}
+								onChange={ ( url ) => setAttributes( { url } ) }
 							/>
 						</PanelBody>
 					</InspectorControls>

@@ -15,9 +15,9 @@
 	margin-block-start: 0 !important;
 	margin-block-end: 0 !important;
 	transition:
-		overflow var( --hm-popup--animation-speed, 300ms ) ease-in-out allow-discrete,
-		overlay var( --hm-popup--animation-speed, 300ms ) ease-in-out allow-discrete,
-		display var( --hm-popup--animation-speed, 300ms ) ease-in-out allow-discrete;
+		overflow var(--hm-popup--animation-speed, 300ms) ease-in-out allow-discrete,
+		overlay var(--hm-popup--animation-speed, 300ms) ease-in-out allow-discrete,
+		display var(--hm-popup--animation-speed, 300ms) ease-in-out allow-discrete;
 
 	&:focus {
 		outline: none;
@@ -29,21 +29,12 @@
 		max-width: none;
 	}
 
-	&[open] {
-		overflow: auto;
-	}
-
-	&[open] > * {
-		opacity: 1;
-		position: relative;
-	}
-
 	> * {
-		max-width: var( --wp--style--global--content-size, 680px );
+		max-width: var(--wp--style--global--content-size, 680px);
 		position: relative;
 		z-index: 2;
 		width: 100%;
-		background-color: rgb( 255, 255, 255 );
+		background-color: rgb(255, 255, 255);
 		margin-block-start: 0 !important;
 		margin-top: 0 !important;
 		margin-bottom: 0 !important;
@@ -52,10 +43,19 @@
 		transform-origin: center;
 		opacity: 0;
 		transition:
-			opacity var( --hm-popup--animation-speed, 300ms ) ease-in-out,
-			left var( --hm-popup--animation-speed, 300ms ) ease-in-out,
-			right var( --hm-popup--animation-speed, 300ms ) ease-in-out,
-			transform var( --hm-popup--animation-speed, 300ms ) ease-in-out;
+			opacity var(--hm-popup--animation-speed, 300ms) ease-in-out,
+			left var(--hm-popup--animation-speed, 300ms) ease-in-out,
+			right var(--hm-popup--animation-speed, 300ms) ease-in-out,
+			transform var(--hm-popup--animation-speed, 300ms) ease-in-out;
+	}
+
+	&[open] {
+		overflow: auto;
+	}
+
+	&[open] > * {
+		opacity: 1;
+		position: relative;
 	}
 
 	&.is-style-side--left > *,
@@ -120,9 +120,9 @@
 	background-color: transparent;
 	opacity: 0;
 	transition:
-		display var( --hm-popup--animation-speed, 300ms ) allow-discrete,
-		overlay var( --hm-popup--animation-speed, 300ms ) allow-discrete,
-		opacity var( --hm-popup--animation-speed, 300ms ) ease-in-out;
+		display var(--hm-popup--animation-speed, 300ms) allow-discrete,
+		overlay var(--hm-popup--animation-speed, 300ms) allow-discrete,
+		opacity var(--hm-popup--animation-speed, 300ms) ease-in-out;
 }
 
 .wp-block-hm-popup[open]::backdrop {

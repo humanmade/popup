@@ -57,8 +57,10 @@ test.describe( 'Popup Block Anchoring', () => {
 		} );
 
 		// Click on the popup block to select it and add content
-		await page.locator('iframe[name="editor-canvas"]').contentFrame()
-			.getByRole('document', { name: 'Empty block; start writing or' })
+		await page
+			.locator( 'iframe[name="editor-canvas"]' )
+			.contentFrame()
+			.getByRole( 'document', { name: 'Empty block; start writing or' } )
 			.click();
 
 		// Type some content
@@ -136,11 +138,12 @@ test.describe( 'Popup Block Anchoring', () => {
 		} );
 
 		// Add content to popup
-		await page.locator('iframe[name="editor-canvas"]').contentFrame()
-			.getByRole('document', { name: 'Empty block; start writing or' })
+		await page
+			.locator( 'iframe[name="editor-canvas"]' )
+			.contentFrame()
+			.getByRole( 'document', { name: 'Empty block; start writing or' } )
 			.click();
 		await page.keyboard.type( 'Right anchored popup' );
-
 
 		// Publish the post
 		const postId = await editor.publishPost();

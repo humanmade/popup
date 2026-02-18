@@ -149,6 +149,7 @@ const AnchorPositionControl = ( { value, onChange } ) => {
 
 	return (
 		<BaseControl
+			id="hm-popup-anchor-position"
 			label={ __( 'Anchor Position', 'hm-popup' ) }
 			help={ __(
 				'Choose where the popup appears relative to the trigger button.',
@@ -246,9 +247,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 	styles.backgroundImage = `${ backgrounds.join( ', ' ) } !important`;
 
-	const needsWidth = attributes.className?.includes( 'is-style-anchored' )
-		|| attributes.className?.includes( 'is-style-side--left' )
-		|| attributes.className?.includes( 'is-style-side--right' );
+	const needsWidth =
+		attributes.className?.includes( 'is-style-anchored' ) ||
+		attributes.className?.includes( 'is-style-side--left' ) ||
+		attributes.className?.includes( 'is-style-side--right' );
 
 	const isAnchored = attributes.className?.includes( 'is-style-anchored' );
 
@@ -439,7 +441,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					<RangeControl
 						label={ __( 'Backdrop opacity', 'hm-popup' ) }
 						value={ attributes.opacity }
-						onChange={ ( opacity ) => setAttributes( { opacity } ) }
+						onChange={ ( newOpacity ) =>
+							setAttributes( { opacity: newOpacity } )
+						}
 						min={ 0 }
 						max={ 100 }
 						step={ 1 }
