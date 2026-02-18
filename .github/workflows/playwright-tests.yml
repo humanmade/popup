@@ -79,11 +79,11 @@ jobs:
                   path: playwright-report/
                   retention-days: 7
 
-            - name: Stop Playground
+            - name: Stop WordPress Playground
               if: always()
               run: |
-                  if [ -f playground.pid ]; then
-                    kill $(cat playground.pid) || true
+                  if [ ! -z "$PLAYGROUND_PID" ]; then
+                    kill $PLAYGROUND_PID || true
                   fi
 
             - name: Comment test results on PR
