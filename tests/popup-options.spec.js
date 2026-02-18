@@ -6,6 +6,7 @@ const { test, expect } = require( '@wordpress/e2e-test-utils-playwright' );
 test.describe( 'Popup Block Options', () => {
 	test.beforeEach( async ( { admin, editor } ) => {
 		await admin.createNewPost();
+		await editor.setPreferences( 'core/edit-post', { welcomeGuide: false } );
 		await editor.insertBlock( { name: 'hm/popup' } );
 	} );
 
@@ -51,7 +52,7 @@ test.describe( 'Popup Block Options', () => {
 				.selectOption( 'load' );
 
 			await expect(
-				page.getByRole( 'group', { name: 'Cookie expiration' } )
+				page.getByText( 'Cookie expiration' )
 			).toBeVisible();
 		} );
 
@@ -65,7 +66,7 @@ test.describe( 'Popup Block Options', () => {
 				.selectOption( 'exit' );
 
 			await expect(
-				page.getByRole( 'group', { name: 'Cookie expiration' } )
+				page.getByText( 'Cookie expiration' )
 			).toBeVisible();
 		} );
 
@@ -80,7 +81,7 @@ test.describe( 'Popup Block Options', () => {
 				.selectOption( 'click' );
 
 			await expect(
-				page.getByRole( 'group', { name: 'Cookie expiration' } )
+				page.getByText( 'Cookie expiration' )
 			).not.toBeVisible();
 		} );
 	} );

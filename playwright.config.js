@@ -13,7 +13,7 @@ const config = {
 		[ 'list' ],
 	],
 	use: {
-		baseURL: process.env.WP_BASE_URL || 'http://localhost:9400',
+		baseURL: process.env.WP_BASE_URL || 'http://127.0.0.1:9400',
 		trace: 'on-first-retry',
 	},
 	projects: [
