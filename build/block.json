@@ -1,0 +1,74 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "hm/popup",
+  "title": "Popup Block",
+  "category": "widgets",
+  "icon": "exit",
+  "description": "Popup wrapper block",
+  "example": {},
+  "allowedBlocks": [
+    "core/group"
+  ],
+  "supports": {
+    "html": false,
+    "anchor": true,
+    "multiple": true,
+    "layout": {
+      "default": {
+        "type": "constrained"
+      },
+      "allowJustification": false,
+      "allowEditing": true,
+      "allowCustomContentAndWideSize": true,
+      "allowInheriting": false
+    },
+    "color": {
+      "text": false,
+      "background": true,
+      "__experimentalSkipSerialization": true
+    },
+    "background": {
+      "backgroundImage": true,
+      "backgroundSize": true,
+      "__experimentalSkipSerialization": true
+    }
+  },
+  "attributes": {
+    "opacity": {
+      "type": "number",
+      "default": 75
+    },
+    "trigger": {
+      "type": "string",
+      "default": "click",
+      "enum": [
+        "click",
+        "exit",
+        "load"
+      ]
+    },
+    "cookieExpiration": {
+      "type": "number",
+      "default": 7
+    },
+    "dismissible": {
+      "type": "boolean",
+      "default": true
+    },
+    "dismissOnSubmit": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "selectors": {
+    "root": ".wp-block-hm-popup",
+    "color": ".wp-block-hm-popup::backdrop",
+    "background": ".wp-block-hm-popup::backdrop"
+  },
+  "textdomain": "hm-popup",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "viewScript": "file:./view.js"
+}
