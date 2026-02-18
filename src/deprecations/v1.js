@@ -2,6 +2,10 @@ import { useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
 
 /**
  * Deprecated save function (v1): Uses data-dismissible attribute instead of native closedby.
+ *
+ * @param {Object} props
+ * @param {Object} props.attributes
+ * @return {Element} Element to render.
  */
 const save = ( { attributes } ) => {
 	const blockProps = useBlockProps.save();

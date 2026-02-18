@@ -222,7 +222,7 @@ test.describe( 'Popup Block Options', () => {
 
 			// Clear localStorage so cookie expiry doesn't block the popup.
 			await page.goto( `/?p=${ postId }` );
-			await page.evaluate( () => localStorage.clear() );
+			await page.evaluate( () => window.localStorage.clear() );
 			await page.reload();
 
 			const dialog = page.locator( '.wp-block-hm-popup' );
@@ -243,7 +243,7 @@ test.describe( 'Popup Block Options', () => {
 
 			const postId = await editor.publishPost();
 			await page.goto( `/?p=${ postId }` );
-			await page.evaluate( () => localStorage.clear() );
+			await page.evaluate( () => window.localStorage.clear() );
 			await page.reload();
 
 			const dialog = page.locator( '.wp-block-hm-popup' );

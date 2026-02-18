@@ -20,6 +20,7 @@ export default function save( { attributes } ) {
 			data-dismiss-on-submit={
 				attributes.dismissOnSubmit ? 'true' : 'false'
 			}
+			// eslint-disable-next-line react/no-unknown-property
 			closedby={ attributes.dismissible === false ? 'none' : 'any' }
 		>
 			{ children }
