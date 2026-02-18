@@ -20,23 +20,7 @@ import './style.scss';
 import Edit from './edit';
 import save from './save';
 import metadata from './block.json';
-
-/**
- * Deprecated save function with data-dismissible attribute.
- */
-const deprecatedSave = ( { attributes } ) => {
-	return (
-		<dialog
-			className="wp-block-hm-popup"
-			data-trigger={ attributes.trigger || 'click' }
-			data-expiry={ attributes.cookieExpiration }
-			data-backdrop-opacity={ ( attributes.opacity || 1 ) / 100 }
-			data-backdrop-color={ attributes.backgroundColor }
-			data-dismissible={ attributes.dismissible !== false ? 'true' : 'false' }
-			data-dismiss-on-submit={ attributes.dismissOnSubmit ? 'true' : 'false' }
-		/>
-	);
-};
+import v1Deprecation from './deprecations/v1';
 
 /**
  * Every block starts by registering a new block type definition.
@@ -60,7 +44,7 @@ registerBlockType( metadata.name, {
 	deprecated: [
 		{
 			attributes: metadata.attributes,
-			save: deprecatedSave,
+			save: v1Deprecation.save,
 		},
 	],
 } );
