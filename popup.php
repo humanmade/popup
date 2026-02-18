@@ -58,7 +58,10 @@ function filter_wp_kses_allowed_html( array $html, string $context ) : array {
 		'open' => [
 			'valueless' => 'y',
 		],
+		'closedby' => true,
 	] );
+	$html['button']['commandfor'] = true;
+	$html['button']['command'] = true;
 
 	return $html;
 }

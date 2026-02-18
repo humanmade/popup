@@ -12,10 +12,23 @@ const mouseEvent = ( e ) => {
 	}
 };
 
+const openPopup = ( popup ) => {
+	document.querySelector( 'html' ).classList.add( 'has-modal-open' );
+	popup.showModal();
+};
+
+const isWithinExpiry = ( storageKey, expirationDays ) => {
+	const lastShown = parseInt(
+		window.localStorage.getItem( storageKey ) || 0,
+		10
+	);
+	return lastShown >= Date.now() - expirationDays * 24 * 60 * 60 * 1000;
+};
+
 const bootstrap = () => {
 	let exitIntentSetup = false;
 	document.querySelectorAll( '.wp-block-hm-popup' ).forEach( ( popup ) => {
-		// Block selectors API doesn't work so we need to
+		const dismissOnSubmit = popup.dataset.dismissOnSubmit === 'true';
 
 		// On close remove HTML class.
 		popup.addEventListener( 'close', () => {
@@ -24,12 +37,14 @@ const bootstrap = () => {
 				.classList.remove( 'has-modal-open' );
 		} );
 
-		// On backdrop click, close modal.
-		popup.addEventListener( 'mousedown', ( event ) => {
-			if ( event.target === event.currentTarget ) {
-				event.currentTarget.close();
-			}
-		} );
+		// Dismiss on form submit.
+		if ( dismissOnSubmit ) {
+			popup.querySelectorAll( 'form' ).forEach( ( form ) => {
+				form.addEventListener( 'submit', () => {
+					popup.close();
+				} );
+			} );
+		}
 
 		// Handle click trigger.
 		if ( popup?.dataset.trigger === 'click' ) {
@@ -38,10 +53,7 @@ const bootstrap = () => {
 				.forEach( ( trigger ) => {
 					trigger.addEventListener( 'click', ( event ) => {
 						event.preventDefault();
-						document
-							.querySelector( 'html' )
-							.classList.add( 'has-modal-open' );
-						popup.showModal();
+						openPopup( popup );
 					} );
 				} );
 		}
@@ -52,17 +64,24 @@ const bootstrap = () => {
 			const expirationDays = parseInt( popup?.dataset.expiry || 7, 10 );
 
 			if (
-				parseInt(
-					window.localStorage.getItem( 'exitIntentShown' ) || 0,
-					10
-				) <
-					Date.now() - expirationDays * 24 * 60 * 60 * 1000 &&
+				! isWithinExpiry( 'exitIntentShown', expirationDays ) &&
 				! exitIntentSetup
 			) {
 				exitIntentSetup = true;
 				setTimeout( () => {
 					document.addEventListener( 'mouseout', mouseEvent );
 				}, 2000 );
+			}
+		}
+
+		// Handle page load trigger.
+		if ( popup?.dataset.trigger === 'load' ) {
+			const expirationDays = parseInt( popup?.dataset.expiry || 7, 10 );
+			const storageKey = `loadPopupShown_${ popup.id || 'popup' }`;
+
+			if ( ! isWithinExpiry( storageKey, expirationDays ) ) {
+				openPopup( popup );
+				window.localStorage.setItem( storageKey, Date.now() );
 			}
 		}
 	} );
