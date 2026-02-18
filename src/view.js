@@ -12,6 +12,26 @@ const mouseEvent = ( e ) => {
 	}
 };
 
+/**
+ * Apply CSS anchor positioning styles to popup and trigger.
+ *
+ * @param {HTMLElement} popup   The popup dialog element.
+ * @param {HTMLElement} trigger The trigger element that opens the popup.
+ */
+const applyCssAnchorPositioning = ( popup, trigger ) => {
+	const position = popup.dataset.anchorPosition || 'bottom';
+	const anchorName = `--popup-anchor-${ popup.id || 'default' }`;
+
+	// Set the anchor-name on the trigger element.
+	trigger.style.anchorName = anchorName;
+
+	// Set the position-anchor on the popup.
+	popup.style.positionAnchor = anchorName;
+
+	// Store position as a data attribute for use in stylesheet.
+	popup.dataset.anchorPositionActive = position;
+};
+
 const openPopup = ( popup ) => {
 	document.querySelector( 'html' ).classList.add( 'has-modal-open' );
 	popup.showModal();
@@ -29,6 +49,16 @@ const bootstrap = () => {
 	let exitIntentSetup = false;
 	document.querySelectorAll( '.wp-block-hm-popup' ).forEach( ( popup ) => {
 		const dismissOnSubmit = popup.dataset.dismissOnSubmit === 'true';
+		const expirationDays = parseInt( popup?.dataset.expiry ?? 7, 10 );
+
+		// On clicking the dialog but not its content, close.
+		if ( popup.closedBy === 'any' ) {
+			popup.addEventListener( 'click', ( event ) => {
+				if ( event.currentTarget === popup ) {
+					popup.close();
+				}
+			} );
+		}
 
 		// On close remove HTML class.
 		popup.addEventListener( 'close', () => {
@@ -48,11 +78,19 @@ const bootstrap = () => {
 
 		// Handle click trigger.
 		if ( popup?.dataset.trigger === 'click' ) {
+			const isAnchored = popup.classList.contains( 'is-style-anchored' );
+
 			document
 				.querySelectorAll( `[href$="#${ popup.id || 'open-popup' }"]` )
 				.forEach( ( trigger ) => {
 					trigger.addEventListener( 'click', ( event ) => {
 						event.preventDefault();
+
+						// Apply CSS anchor positioning if anchored style is active.
+						if ( isAnchored ) {
+							applyCssAnchorPositioning( popup, trigger );
+						}
+
 						openPopup( popup );
 					} );
 				} );
@@ -60,9 +98,6 @@ const bootstrap = () => {
 
 		// Handle exit intent trigger.
 		if ( popup?.dataset.trigger === 'exit' ) {
-			// Get expiry setting on local storage value.
-			const expirationDays = parseInt( popup?.dataset.expiry || 7, 10 );
-
 			if (
 				! isWithinExpiry( 'exitIntentShown', expirationDays ) &&
 				! exitIntentSetup
@@ -76,7 +111,6 @@ const bootstrap = () => {
 
 		// Handle page load trigger.
 		if ( popup?.dataset.trigger === 'load' ) {
-			const expirationDays = parseInt( popup?.dataset.expiry || 7, 10 );
 			const storageKey = `loadPopupShown_${ popup.id || 'popup' }`;
 
 			if ( ! isWithinExpiry( storageKey, expirationDays ) ) {

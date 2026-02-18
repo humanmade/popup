@@ -24,12 +24,11 @@
 		"color": {
 			"text": false,
 			"background": true,
+			"gradients": true,
 			"__experimentalSkipSerialization": true
 		},
-		"background": {
-			"backgroundImage": true,
-			"backgroundSize": true,
-			"__experimentalSkipSerialization": true
+		"spacing": {
+			"padding": true
 		}
 	},
 	"attributes": {
@@ -46,6 +45,35 @@
 			"type": "number",
 			"default": 7
 		},
+		"anchorPosition": {
+			"type": "string",
+			"default": "bottom",
+			"enum": [
+				"top",
+				"top-start",
+				"top-end",
+				"bottom",
+				"bottom-start",
+				"bottom-end",
+				"left",
+				"left-start",
+				"left-end",
+				"right",
+				"right-start",
+				"right-end"
+			]
+		},
+		"style": {
+			"type": "object",
+			"default": {
+				"padding": {
+					"top": "var:preset|spacing|30",
+					"right": "var:preset|spacing|30",
+					"bottom": "var:preset|spacing|30",
+					"left": "var:preset|spacing|30"
+				}
+			}
+		},
 		"dismissible": {
 			"type": "boolean",
 			"default": true
@@ -57,8 +85,7 @@
 	},
 	"selectors": {
 		"root": ".wp-block-hm-popup",
-		"color": ".wp-block-hm-popup::backdrop",
-		"background": ".wp-block-hm-popup::backdrop"
+		"color": ".wp-block-hm-popup::backdrop"
 	},
 	"textdomain": "hm-popup",
 	"editorScript": "file:./index.js",
