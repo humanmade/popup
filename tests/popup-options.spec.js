@@ -165,6 +165,20 @@ test.describe( 'Popup Block Options', () => {
 			);
 		} );
 
+		test( 'outputs closedby="any" for dismissible dialogs', async ( {
+			editor,
+			page,
+		} ) => {
+			const postId = await editor.publishPost();
+			await page.goto( `/?p=${ postId }` );
+
+			const dialog = page.locator( '.wp-block-hm-popup' );
+			await expect( dialog ).toHaveAttribute(
+				'closedby',
+				'any'
+			);
+		} );
+
 		test( 'outputs closedby="none" when undismissible', async ( {
 			editor,
 			page,
