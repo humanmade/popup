@@ -40,11 +40,19 @@
 		"trigger": {
 			"type": "string",
 			"default": "click",
-			"enum": [ "click", "exit" ]
+			"enum": [ "click", "exit", "load" ]
 		},
 		"cookieExpiration": {
 			"type": "number",
 			"default": 7
+		},
+		"dismissible": {
+			"type": "boolean",
+			"default": true
+		},
+		"dismissOnSubmit": {
+			"type": "boolean",
+			"default": false
 		}
 	},
 	"selectors": {

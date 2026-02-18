@@ -17,6 +17,8 @@ export default function save( { attributes } ) {
 			data-expiry={ attributes.cookieExpiration }
 			data-backdrop-opacity={ ( attributes.opacity || 1 ) / 100 }
 			data-backdrop-color={ attributes.backgroundColor }
+			data-dismissible={ attributes.dismissible !== false ? 'true' : 'false' }
+			data-dismiss-on-submit={ attributes.dismissOnSubmit ? 'true' : 'false' }
 		>
 			{ children }
 		</dialog>
