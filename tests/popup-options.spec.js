@@ -11,16 +11,12 @@ test.describe( 'Popup Block Options', () => {
 		} );
 		// Close welcome guide if it appears
 		const welcomeGuideVisible = await page
-			.locator(
-				'.edit-site-welcome-guide, .edit-post-welcome-guide'
-			)
+			.locator( '.edit-site-welcome-guide, .edit-post-welcome-guide' )
 			.isVisible( { timeout: 2000 } )
 			.catch( () => false );
 
 		if ( welcomeGuideVisible ) {
-			const closeButton = page.locator(
-				'button[aria-label="Close"]'
-			);
+			const closeButton = page.locator( 'button[aria-label="Close"]' );
 			const isCloseButtonVisible = await closeButton
 				.isVisible( { timeout: 1000 } )
 				.catch( () => false );
