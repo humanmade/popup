@@ -51,6 +51,15 @@ const bootstrap = () => {
 		const dismissOnSubmit = popup.dataset.dismissOnSubmit === 'true';
 		const expirationDays = parseInt( popup?.dataset.expiry ?? 7, 10 );
 
+		// On clicking the dialog but not its content, close.
+		if ( popup.closedBy == 'any' ) {
+			popup.addEventListener( 'click', ( event ) => {
+				if ( event.currentTarget === popup ) {
+					popup.close();
+				}
+			} );
+		}
+
 		// On close remove HTML class.
 		popup.addEventListener( 'close', () => {
 			document

@@ -2,9 +2,10 @@
 .wp-block-hm-popup {
 	position: relative;
 	top: 0 !important;
-	width: auto;
+	width: 100% !important;
 	height: auto;
 	max-height: max-content;
+	max-width: 100% !important;
 	opacity: 1;
 	margin: 0;
 	background-color: rgba(0, 0, 0, 0.3) !important;

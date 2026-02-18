@@ -79,24 +79,37 @@ function filter_render_block( $block_content, $block, \WP_Block $instance ) {
 	$classname = 'wp-elements-' . md5( maybe_serialize( $block['attrs'] ) );
 
 	$styles = [
-		'opacity' => ( $block['attrs']['opacity'] ?? '0' ) . '%',
-		'background-color' => "var(--wp--preset--color--{$block['attrs']['backgroundColor']})",
 		'background-position' => 'center',
 		'background-size' => 'cover',
 		'background-repeat' => 'no-repeat',
 	];
 
+	if ( ! empty( $block['attrs']['backgroundColor'] ) ) {
+		$styles['background-color'] = "var(--wp--preset--color--{$block['attrs']['backgroundColor']}) !important";
+	}
+
 	if ( ! empty( $block['attrs']['style']['color']['gradient'] ) ) {
-		$styles['background-color'] = 'transparent';
-		$styles['background-image'] = "{$block['attrs']['style']['color']['gradient']}";
+		$styles['background-color'] = 'transparent !important';
+		$styles['background-image'] = "{$block['attrs']['style']['color']['gradient']} !important";
 	}
 
 	$styles = array_map( function ( $style, $prop ) {
-		return "{$prop}: {$style} !important";
+		return "{$prop}: {$style}";
 	}, $styles, array_keys( $styles ) );
+
+	$open_styles = [
+		'opacity' => ( $block['attrs']['opacity'] ?? '0' ) . '%',
+	];
+
+	$open_styles = array_map( function ( $style, $prop ) {
+		return "{$prop}: {$style}";
+	}, $open_styles, array_keys( $open_styles ) );
 
 	$style = implode( ';', $styles );
 	$style = ".{$classname}::backdrop{{$style}}";
+
+	$open_style = implode( ';', $open_styles );
+	$style .= ".{$classname}[open]::backdrop{{$open_style}}";
 
 	wp_enqueue_block_support_styles( $style );
 

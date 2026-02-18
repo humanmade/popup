@@ -4,14 +4,33 @@
 const { test, expect } = require( '@wordpress/e2e-test-utils-playwright' );
 
 test.describe( 'Popup Block Anchoring', () => {
+	test.beforeEach( async ( { admin, editor, page } ) => {
+		await admin.createNewPost();
+		await editor.setPreferences( 'core/edit-post', {
+			welcomeGuide: false,
+		} );
+		// Close welcome guide if it appears
+		const welcomeGuideVisible = await page
+			.locator( '.edit-site-welcome-guide, .edit-post-welcome-guide' )
+			.isVisible( { timeout: 2000 } )
+			.catch( () => false );
+
+		if ( welcomeGuideVisible ) {
+			const closeButton = page.locator( 'button[aria-label="Close"]' );
+			const isCloseButtonVisible = await closeButton
+				.isVisible( { timeout: 1000 } )
+				.catch( () => false );
+			if ( isCloseButtonVisible ) {
+				await closeButton.click();
+				await page.waitForTimeout( 500 );
+			}
+		}
+	} );
+
 	test( 'should anchor popup to trigger button on frontend', async ( {
-		admin,
 		editor,
 		page,
 	} ) => {
-		// Create a new post
-		await admin.createNewPost();
-
 		// Insert a buttons block first (as the trigger)
 		await editor.insertBlock( {
 			name: 'core/buttons',
@@ -38,22 +57,18 @@ test.describe( 'Popup Block Anchoring', () => {
 		} );
 
 		// Click on the popup block to select it and add content
-		const popupElement = page.locator(
-			'.wp-block-hm-popup .wp-block-group'
-		);
-		await popupElement.click();
+		await page.locator('iframe[name="editor-canvas"]').contentFrame()
+			.getByRole('document', { name: 'Empty block; start writing or' })
+			.click();
 
 		// Type some content
 		await page.keyboard.type( 'Anchored popup content' );
 
 		// Publish the post
-		await editor.publishPost();
+		const postId = await editor.publishPost();
 
 		// Get the post URL and visit the frontend
-		const postUrl = await page
-			.locator( 'input.components-text-control__input[readonly]' )
-			.inputValue();
-		await page.goto( postUrl );
+		await page.goto( `/?p=${ postId }` );
 
 		// Verify the popup is initially hidden (not open)
 		const dialog = page.locator( 'dialog.wp-block-hm-popup' );
@@ -92,13 +107,9 @@ test.describe( 'Popup Block Anchoring', () => {
 	} );
 
 	test( 'should position popup at different anchor positions', async ( {
-		admin,
 		editor,
 		page,
 	} ) => {
-		// Create a new post
-		await admin.createNewPost();
-
 		// Insert a buttons block (as the trigger)
 		await editor.insertBlock( {
 			name: 'core/buttons',
@@ -125,18 +136,17 @@ test.describe( 'Popup Block Anchoring', () => {
 		} );
 
 		// Add content to popup
-		const popupElement = page.locator(
-			'.wp-block-hm-popup .wp-block-group'
-		);
-		await popupElement.click();
+		await page.locator('iframe[name="editor-canvas"]').contentFrame()
+			.getByRole('document', { name: 'Empty block; start writing or' })
+			.click();
 		await page.keyboard.type( 'Right anchored popup' );
 
-		// Publish and visit frontend
-		await editor.publishPost();
-		const postUrl = await page
-			.locator( 'input.components-text-control__input[readonly]' )
-			.inputValue();
-		await page.goto( postUrl );
+
+		// Publish the post
+		const postId = await editor.publishPost();
+
+		// Get the post URL and visit the frontend
+		await page.goto( `/?p=${ postId }` );
 
 		// Get button position and click
 		const triggerButton = page.locator( 'a:has-text("Open Right Popup")' );

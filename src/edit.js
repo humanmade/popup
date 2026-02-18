@@ -1,12 +1,10 @@
 import { useState, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { useSelect, useDispatch } from '@wordpress/data';
 
 import {
 	useBlockProps,
 	useInnerBlocksProps,
 	InspectorControls,
-	store as blockEditorStore,
 } from '@wordpress/block-editor';
 
 import {
@@ -252,6 +250,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		|| attributes.className?.includes( 'is-style-side--left' )
 		|| attributes.className?.includes( 'is-style-side--right' );
 
+	const isAnchored = attributes.className?.includes( 'is-style-anchored' );
+
 	// When anchored style is applied, set default contentSize
 	useEffect( () => {
 		if ( needsWidth && ! layout?.contentSize ) {
@@ -303,7 +303,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		<div { ...innerBlocksProps }>
 			<style>
 				{ `#block-${ clientId } {
-					background-color: ${ styles.backgroundColor };
+					background-color: ${ styles.backgroundColor ?? 'white' };
 					&::before {
 						content: '';
 						position: absolute;
