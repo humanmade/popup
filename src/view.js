@@ -54,7 +54,7 @@ const bootstrap = () => {
 		// On clicking the dialog but not its content, close.
 		if ( popup.closedBy === 'any' ) {
 			popup.addEventListener( 'click', ( event ) => {
-				if ( event.currentTarget === popup ) {
+				if ( event.target === popup ) {
 					popup.close();
 				}
 			} );
