@@ -88,9 +88,10 @@ function filter_render_block( $block_content, $block, \WP_Block $instance ) {
 		$styles['background-color'] = "var(--wp--preset--color--{$block['attrs']['backgroundColor']}) !important";
 	}
 
-	if ( ! empty( $block['attrs']['style']['color']['gradient'] ) ) {
+	$gradient = $block['attrs']['style']['color']['gradient'] ?? '';
+	if ( ! empty( $gradient ) ) {
 		$styles['background-color'] = 'transparent !important';
-		$styles['background-image'] = "{$block['attrs']['style']['color']['gradient']} !important";
+		$styles['background-image'] = "{$gradient} !important";
 	}
 
 	$styles = array_map( function ( $style, $prop ) {
